@@ -13,12 +13,10 @@ import java.sql.SQLException;
  * @author Saul Neri
  */
 public class ConexionAbarrotesBD {
-    private String NOMBRE_BASE_DATOS  = "abarrotes";
-    private String PUERTO_BASE_DATOS  = "9999"; 
-    private String URL_MYSQL          = "jdbc:mysql://localhost:" + PUERTO_BASE_DATOS + "/";      
-    private String USUARIO            = "root";
-    private String CONTRASENA         = "";
+    private ConexionConfig configuracion;
+        
     // NOTE: NO CAMBIAR
+    private final String URL_MYSQL      = "jdbc:mysql://localhost:%s/";  
     private final String DRIVER_MYSQL   = "com.mysql.cj.jdbc.Driver";
     
     private Connection conexion;
@@ -27,23 +25,18 @@ public class ConexionAbarrotesBD {
      * Crea una conexion a la base de datos con los datos por default.
      */
     public ConexionAbarrotesBD() {
-        
+        this.configuracion = new ConexionConfig();
     }
     
     /**
-     * Crea una conexion a la base de datos con los datos especificados.
-     * @param baseDatosNombre Nombre de la base de datos (default es "abarrotes")
-     * @param puerto Puerto de la base de datos (default es 9999)
-     * @param usuario Usuario de la base de datos MySQL (default es "root")
-     * @param contrasena Contrasena para acceder a dicha base de datos (default es "" (cadena vacia))
+     * Crea una nueva conexion a la base de datos abarrotes con la configuracion
+     * de conexion dada.
+     * @param configuracion Configuracion de conexion
      */
-    public ConexionAbarrotesBD(String baseDatosNombre, String puerto, String usuario, String contrasena) {
-        this.NOMBRE_BASE_DATOS = baseDatosNombre;
-        this.PUERTO_BASE_DATOS = puerto;
-        this.USUARIO = usuario;
-        this.CONTRASENA = contrasena;
+    public ConexionAbarrotesBD(ConexionConfig configuracion) {
+        this.configuracion = configuracion;
     }
-  
+      
     /**
      * Devuelve la conexion interna de MySQL de la base de datos, utilizada para 
      * trabajar con ella en consultas a la misma.
@@ -66,9 +59,9 @@ public class ConexionAbarrotesBD {
                 throw new ErrorConexionException("No se pudo conectar a la base de datos por error un desonocido...");
             }
             conexion = DriverManager.getConnection(
-                    URL_MYSQL + NOMBRE_BASE_DATOS, 
-                    USUARIO, 
-                    CONTRASENA
+                    String.format(URL_MYSQL, this.configuracion.getPuertoConexion()), 
+                    this.configuracion.getNombreUsuario(), 
+                    this.configuracion.getContrasena()
             );
         } catch (SQLException ex) {
             throw new ErrorConexionException("No se pudo conectar a la base de datos");
