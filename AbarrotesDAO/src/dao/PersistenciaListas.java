@@ -142,8 +142,12 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void agregar(Producto producto) throws PersistenciaException {
-        if (catalogoProductos.obten(producto) == null) {
-            catalogoProductos.agrega(producto);
+        if (catalogoProductos.obten(producto) != null) {
+            try {
+                catalogoProductos.agrega(producto);
+            } catch (DAOException ex) {
+                throw new PersistenciaException(ex.getMessage());
+            }
         } else {
             throw new PersistenciaException("No se pudo agregar el producto");
         }

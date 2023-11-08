@@ -5,8 +5,6 @@ import excepciones.PersistenciaException;
 import java.util.ArrayList;
 import java.util.List;
 import objetosNegocio.MovimientoEmpacado;
-import objetosNegocio.Producto;
-import objetosNegocio.ProductoEmpacado;
 import objetosServicio.Periodo;
 
 /**

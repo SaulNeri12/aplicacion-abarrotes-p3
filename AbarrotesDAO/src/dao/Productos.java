@@ -2,85 +2,205 @@ package dao;
 
 import excepciones.DAOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import objetosNegocio.Producto;
 
+import conexion.ConexionAbarrotesBD;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+
+import plantillas.ConsultasAbarrotes;
+import plantillas.EliminacionesAbarrotes;
+import plantillas.InsercionesAbarrotes;
+import plantillas.ModificacionesAbarrotes;
+
 /**
- *
- * @author Enrique Rodriguez
+ * Permite realizar operaciones para manejar productos almacenados en la base 
+ * de datos Abarrotes.
+ * @author Saul Neri
  */
 public class Productos extends Producto {
-
-private List<Producto> productos;
+    
+    private ConexionAbarrotesBD conexionBD;
+    // donde se alojaran los productos que se vayan guardando con la PAGINACION
+    private List<Producto> productos;
     
     /** 
-     * Constructor que crea como instanica una lista de Productos para los productos del abarrotes.
+     * Crea una instancia del manejador del inventario de productos.
      */
-    public Productos(){
-        this.productos = new ArrayList<Producto>();
+    public Productos() {
+        this.conexionBD = new ConexionAbarrotesBD();
+        productos = new ArrayList<>();
+    }
+    
+    /**
+     * Crea una instancia del manejador del inventario de productos y 
+     * accede a la base de datos a partir de la conexion dada.
+     * @param conexion Conexion a la base de datos de abarrotes
+     */
+    public Productos(ConexionAbarrotesBD conexion) {
+        this.conexionBD = conexion;
+        productos = new ArrayList<>();
     }
     
     /** 
-     * Metodo que obtiene el producto que se da por parametro, siempre y cuando su clave sea la misma,
-     * regresara null si no existe.
-     * @param producto producto a enviar
-     * @return regresa el producto que se busca en la lista
+     * Obtiene el producto especificado de la base de datos
+     * @param producto producto a buscar
+     * @return Devuelve el producto si se encuentra en la base de datos
      */
     public Producto obten(Producto producto){
-        Producto product1 = null;
-        Iterator<Producto> it = productos.iterator();
-        while (it.hasNext()) {
-            product1 = it.next();
-            if (product1.equals(producto)) {
-                return product1;
+        Producto productoEncontrado = null;
+        
+        PreparedStatement stmt;        
+        ResultSet rs;
+
+        try {
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(
+                    ConsultasAbarrotes.PRODUCTOS_POR_CLAVE, 
+                    ResultSet.TYPE_SCROLL_SENSITIVE, 
+                    ResultSet.CONCUR_UPDATABLE
+            );
+            
+            stmt.setString(1, producto.getClave());
+            
+            rs = stmt.executeQuery();
+            
+            // si no existe el producto...
+            if (!rs.next()) {
+                
+                rs.close();
+                stmt.close();
+                
+                return null;
             }
+            
+            // indica que se requiere el primero encontrado
+            rs.first();
+            
+            // obtiene los datos del primer producto encontrado encontrado
+            String claveProducto = rs.getString("clave_producto");
+            String nombre = rs.getString("nombre");
+            String tipo = rs.getString("tipo");
+            String unidad = rs.getString("unidad");
+
+            productoEncontrado = new Producto(
+                    claveProducto,
+                    nombre, 
+                    tipo.toCharArray()[0], 
+                    unidad
+            );
+            
+            rs.close();
+            stmt.close();
+            
+            return productoEncontrado;
+            
+        } catch (SQLException ex) {
+            System.out.println("#" + ex);
         }
-        return null;
+        
+        return null; // no encontrado
     }
     
     /** 
-     * Metodo que sin restringir clave repetida, agrega a la lista un producto dado.
-     * @param producto producto
+     * Agrega un producto a la base de datos de Abarrotes.
+     * @param producto producto a agregar
+     * @throws DAOException Si el producto ya se encuentra registrado
      */
-    public void agrega(Producto producto){
-        if (!productos.contains(producto)) {
-           productos.add(producto); 
+    public void agrega(Producto producto) throws DAOException {
+        PreparedStatement stmt;        
+
+        try {
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(InsercionesAbarrotes.AGREGAR_PRODUCTO);
+            
+            stmt.setString(1, producto.getClave());
+            stmt.setString(2, producto.getNombre());
+            stmt.setString(3, String.valueOf(producto.getTipo()));
+            stmt.setString(4, producto.getUnidad());
+            
+            int numAnadidos = stmt.executeUpdate();
+            
+            //System.out.println("# anadidos: "+numAnadidos);
+
+            stmt.close();
+
+        } catch (SQLException ex) {
+            //System.out.println("#" + ex.getClass());
+            if (ex.getClass().equals(SQLIntegrityConstraintViolationException.class)) {
+                throw new DAOException("El producto dado ya se encuentra registrado");
+            }
         }
     }
     
     /** 
      * Metodo que reemplaza un producto de la lista (si existe), por el producto dado en el parametro,
      * deben tener la misma clave.
-     * @param producto prodcuto
-     * @throws excepciones.DAOException error
+     * @param producto producto a actualizar
+     * @throws DAOException Si no se pudo actualizar el producto
      */
     public void actualiza(Producto producto) throws DAOException {
-        int i = productos.indexOf(producto);
-        if (i>=0) {
-            productos.set(i, producto);
-        }
-        else {
-            throw new DAOException("El producto no se pudo actualizar");
+        PreparedStatement stmt;        
+
+        try {
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(ModificacionesAbarrotes.ACTUALIZAR_PRODUCTO);
+            
+            stmt.setString(1, producto.getNombre());
+            stmt.setString(2, String.valueOf(producto.getTipo()));
+            stmt.setString(3, producto.getUnidad());
+            // WHERE clave_producto = ...
+            stmt.setString(4, producto.getClave());
+            
+            int numModificados = stmt.executeUpdate();
+
+            if (numModificados <= 0) {
+                throw new DAOException("No se pudo actualizar el producto ya que no se encuentra registrado");
+            }
+            
+            //System.out.println(numModificados + "shesh");
+            
+            stmt.close();
+
+        } catch (SQLException ex) {
+            System.out.println("#" + ex.getClass());
+            throw new DAOException("No se pudo actualizar el producto debido a un error, intentelo mas tarde...");
         }
     }
 
     /**
      * Metodo que elimina un producto de la lista (si existe), por el producto
      * dado en el parametro, deben tener la misma clave.
-     *
-     * @param producto producto
-     * @throws excepciones.DAOException error
+     * @param producto producto a eliminar
+     * @throws DAOException Si no se pudo eliminar el producto
      */
     public void elimina(Producto producto) throws DAOException {
-        if (!productos.remove(producto)) {
-            throw new DAOException("El producto no se pudo eliminar");
+        PreparedStatement stmt;        
+
+        try {
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(EliminacionesAbarrotes.ELIMINAR_PRODUCTO);
+            
+            // WHERE clave_producto = ...
+            stmt.setString(1, producto.getClave());
+            
+            int numEliminados = stmt.executeUpdate();
+
+            if (numEliminados <= 0) {
+                throw new DAOException("No se pudo eliminar el producto debido a que no se encuentra registrado");
+            }
+            
+            //System.out.println(numModificados + "shesh");
+            
+            stmt.close();
+
+        } catch (SQLException ex) {
+            System.out.println("#" + ex.getClass());
+            throw new DAOException("No se pudo eliminar el producto debido a un error, intentelo mas tarde...");
         }
     }
 
     /**
-     * Metodo que muestra la lista de todos los productos del abarrotes.
-     *
+     * Muestra la lista de todos los productos del abarrotes.
      * @return regresa los productos
      */
     public List<Producto> lista() {
@@ -88,7 +208,7 @@ private List<Producto> productos;
     }
     
     /** 
-     * Metodo que muestra una lista de productos de un mismo tipo.
+     * Muestra una lista de productos de un mismo tipo.
      * @param tipo tipo de producto
      * @return regresa lista de productos de un mismo tipo
      */
