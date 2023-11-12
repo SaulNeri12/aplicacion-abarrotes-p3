@@ -29,7 +29,12 @@ public class PruebaProductos {
         
         Productos productos = new Productos(conn);
         
-        Producto p = productos.obten(new Producto("AMC0101223"));
+        Producto p;
+        try {
+            p = productos.obten(new Producto("AMC0101223"));
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         p = new Producto("AMC0101", "Mazapan", 'E', "pz");
         

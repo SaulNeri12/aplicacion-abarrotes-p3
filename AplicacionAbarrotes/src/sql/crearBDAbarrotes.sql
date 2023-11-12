@@ -43,10 +43,10 @@ CREATE TABLE IF NOT EXISTS MovimientosGranel (
 );
 
 CREATE TABLE IF NOT EXISTS usuarios (
-	codigo VARCHAR(10) PRIMARY KEY,
-    nombre VARCHAR(150) NOT NULL,
+	id VARCHAR(10) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
     telefono VARCHAR(15) NOT NULL,
     email VARCHAR(50) NOT NULL,
-	contrasena VARCHAR(10) NOT NULL,
+	contrasena VARCHAR(30) NOT NULL,
     rol ENUM('administrador', 'repartidor')
 );

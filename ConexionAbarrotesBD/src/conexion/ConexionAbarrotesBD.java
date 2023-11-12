@@ -16,7 +16,7 @@ public class ConexionAbarrotesBD {
     private ConexionConfig configuracion;
         
     // NOTE: NO CAMBIAR
-    private final String URL_MYSQL      = "jdbc:mysql://localhost:%s/";  
+    private final String URL_MYSQL      = "jdbc:mysql://localhost:%s/%s";  
     private final String DRIVER_MYSQL   = "com.mysql.cj.jdbc.Driver";
     
     private Connection conexion;
@@ -59,12 +59,12 @@ public class ConexionAbarrotesBD {
                 throw new ErrorConexionException("No se pudo conectar a la base de datos por error un desonocido...");
             }
             conexion = DriverManager.getConnection(
-                    String.format(URL_MYSQL, this.configuracion.getPuertoConexion()), 
+                    String.format(URL_MYSQL, this.configuracion.getPuertoConexion(), configuracion.getNombreBaseDatos()), 
                     this.configuracion.getNombreUsuario(), 
                     this.configuracion.getContrasena()
             );
         } catch (SQLException ex) {
-            throw new ErrorConexionException("No se pudo conectar a la base de datos");
+            throw new ErrorConexionException(ex.getMessage());
         }
     }
     

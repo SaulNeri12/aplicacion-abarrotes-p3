@@ -8,7 +8,6 @@ import objetosNegocio.MovimientoEmpacado;
 import objetosServicio.Periodo;
 
 /**
- *
  * @author Equipo
  */
 public class MovimientosEmpacados {
@@ -21,6 +20,8 @@ public class MovimientosEmpacados {
     public MovimientosEmpacados() {
         this.movimientosEmpacados = new ArrayList();
     }
+    
+   
 
     /** 
      * Metodo que regresa la lista de movimiento de producto granel que se da por el parametro, 
