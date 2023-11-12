@@ -8,6 +8,12 @@ import control.Tabla;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import control.Control;
+import control.Conversiones;
+import dao.PersistenciaListas;
+import excepciones.ErrorConexionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,6 +29,20 @@ public class FrmAbarrotes extends javax.swing.JFrame {
     public FrmAbarrotes() {
         initComponents();
         centrarVentana();
+        
+        try {
+            control.conexionBD.conectar();
+            control.prepararDatos();
+        } catch (ErrorConexionException ex) {
+            JOptionPane.showMessageDialog(
+                    this, 
+                    "No se pudo conectar a la base de datos, intente de nuevo mas tarde", 
+                    "Error de Conexion", 
+                    JOptionPane.ERROR_MESSAGE
+            );
+            
+            System.exit(0);
+        }
     }
     
     /** 
@@ -115,6 +135,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
         menuConsultas = new javax.swing.JMenu();
         menuConsultaProductos = new javax.swing.JMenu();
         opcionMenuConsultaProductos = new javax.swing.JMenuItem();
+        consultarProductoIndividual = new javax.swing.JMenuItem();
         opcionMenuConsultaProductosEmpacados = new javax.swing.JMenuItem();
         opcionMenuConsultaProductosGranel = new javax.swing.JMenuItem();
         menuConsultaInventarios = new javax.swing.JMenu();
@@ -361,6 +382,14 @@ public class FrmAbarrotes extends javax.swing.JFrame {
         });
         menuConsultaProductos.add(opcionMenuConsultaProductos);
 
+        consultarProductoIndividual.setText("Individual");
+        consultarProductoIndividual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                consultarProductoIndividualActionPerformed(evt);
+            }
+        });
+        menuConsultaProductos.add(consultarProductoIndividual);
+
         opcionMenuConsultaProductosEmpacados.setText("Empacados");
         opcionMenuConsultaProductosEmpacados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -524,7 +553,17 @@ public class FrmAbarrotes extends javax.swing.JFrame {
      * @param evt evento al que escuchara.
      */
     private void opcionMenuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionMenuSalirActionPerformed
-        System.exit(0);
+        try {
+            control.conexionBD.desconectar();
+            System.exit(0);
+        } catch (ErrorConexionException ex) {
+            JOptionPane.showMessageDialog(
+                    this, 
+                    "No se pudo desconectar de la base de datos correctamente", 
+                    "Buscar producto", 
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
     }//GEN-LAST:event_opcionMenuSalirActionPerformed
 
     /** 
@@ -965,6 +1004,10 @@ public class FrmAbarrotes extends javax.swing.JFrame {
 
     }//GEN-LAST:event_opcionMenuAcercaDeActionPerformed
 
+    private void consultarProductoIndividualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarProductoIndividualActionPerformed
+        control.buscarProducto(this);
+    }//GEN-LAST:event_consultarProductoIndividualActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1002,6 +1045,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator Separador1;
+    private javax.swing.JMenuItem consultarProductoIndividual;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

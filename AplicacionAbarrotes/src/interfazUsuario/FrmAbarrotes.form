@@ -269,6 +269,14 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="opcionMenuConsultaProductosActionPerformed"/>
                   </Events>
                 </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="consultarProductoIndividual">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Individual"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="consultarProductoIndividualActionPerformed"/>
+                  </Events>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="opcionMenuConsultaProductosEmpacados">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Empacados"/>

@@ -2,8 +2,9 @@
 package interfazUsuario;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import objetosNegocio.Producto;
 
@@ -13,18 +14,18 @@ import objetosNegocio.Producto;
  */
 public class DlgProducto extends javax.swing.JDialog {
 
-    private Producto producto;
-    private int operacion;
-    private StringBuffer respuesta;
+    public Producto producto;
+    public int operacion;
+    public StringBuffer respuesta;
 
     /**
      * Constructor para el cuadro de dialogo DlgProducto.
      */
-    public DlgProducto(java.awt.Frame parent, String title, boolean modal, Producto producto, int operacion, StringBuffer respuesta) {
+    public DlgProducto(java.awt.Frame parent, String title, boolean modal, Producto producto, int operacion, StringBuffer respuestaDialogo) {
         super(parent, title, modal);
         this.producto = producto;
         this.operacion = operacion;
-        this.respuesta = respuesta;
+        this.respuesta = respuestaDialogo;
         
         initComponents();
         
@@ -32,6 +33,16 @@ public class DlgProducto extends javax.swing.JDialog {
         centraCuadroDialogo(parent);
         setResizable(false);
         
+        // detecta cuando se cierra el dialogo al presionar X
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                respuesta.delete(0, respuesta.length());
+                respuesta.append(ConstantesGUI.CANCELAR);
+                //System.out.println(respuesta);
+                dispose();
+            }
+        });
 
         // Modifica el título del botón botonAceptar y establece si los
         // botones botonRestaurar y botonCancelar estarán habilitados.
@@ -52,7 +63,6 @@ public class DlgProducto extends javax.swing.JDialog {
             botonCancelar.setEnabled(false);
         }
 
-        // Despliega la clave del producto
         campoTextoClave.setText(producto.getClave());
         campoTextoClave.setEditable(false);
 
@@ -113,6 +123,24 @@ public class DlgProducto extends javax.swing.JDialog {
      * @return verdadero o falso.
      */
     public boolean validarCampos() {
+        
+        /*
+            Expresion regular para CLAVE_PRODUCTO: Debe estar compuesta e una cadena
+            conformada de manera XXXNNNN, donde las X significan letras mayusculas 
+            mientras que las N son numeros del 0 al 9.
+        
+            Expresion regular para NOMBRE_PRODUCTO: Debe estar compuesto de una 
+            cadena de MAXIMO 50 CARACTERES.
+        
+            Expresion regular para TIPO_PRODUCTO: Debe ser una eleccion de solo 2
+            caracteres, 'G' que significa que es un producto a "Granel", y 'E' que 
+            significa que es un producto "Empacado".
+        
+            Expresion regular para UNIDAD_PRODUCTO: Debe ser una cadena de solo 2 caracteres,
+            la cual simboliza el tipo de unidad que maneja el producto, por ejemplo
+            (gr, mg, kg, ml, lt, gl, etc.)
+        */
+        
         if (campoTextoNombre.getText().equals("")) {
             return false;
         }
@@ -281,6 +309,7 @@ public class DlgProducto extends javax.swing.JDialog {
      * @param evt Evento al que escucha
      */
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
+
         if (operacion == ConstantesGUI.AGREGAR || operacion == ConstantesGUI.ACTUALIZAR) {
             if (validarCampos()) {
                 if (validarTipo()) {
@@ -300,18 +329,21 @@ public class DlgProducto extends javax.swing.JDialog {
                 dispose();
             }
         }
-        if (operacion == ConstantesGUI.DESPLEGAR) {
+        if (operacion == ConstantesGUI.DESPLEGAR || operacion == ConstantesGUI.ELIMINAR) {
+            respuesta.delete(0, respuesta.length());
+            respuesta.append(ConstantesGUI.ACEPTAR);
             dispose();
         }
     }//GEN-LAST:event_botonAceptarActionPerformed
 
     /**
-     * Meotodo oyente del boton cancelar.
-     *
+     * Metodo oyente del boton cancelar.
      * @param evt evento al que esucha.
      */
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
-
+        respuesta.delete(0, respuesta.length());
+        respuesta.append(ConstantesGUI.CANCELAR);
+        //System.out.println(respuesta);
         dispose();
     }//GEN-LAST:event_botonCancelarActionPerformed
     private javax.swing.JTable jtabla;

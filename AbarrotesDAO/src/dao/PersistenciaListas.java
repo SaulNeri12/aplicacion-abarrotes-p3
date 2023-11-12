@@ -1,5 +1,6 @@
 package dao;
 
+import conexion.ConexionAbarrotesBD;
 import excepciones.DAOException;
 import excepciones.PersistenciaException;
 import interfaces.IPersistencia;
@@ -32,7 +33,7 @@ public class PersistenciaListas implements IPersistencia {
     /**
      * Constructor el cual crea intanbcias de Productos, Productos
      * Empacados/Granel y Movimiento Empacado/Granel
-     */
+     
     public PersistenciaListas() {
         this.catalogoProductos = new Productos();
         this.registroVentasGranel = new MovimientosGranel();
@@ -42,6 +43,23 @@ public class PersistenciaListas implements IPersistencia {
         this.registroComprasEmpacados = new MovimientosEmpacados();
         this.inventarioProductosEmpacados = new ProductosEmpacados();
     }
+    */
+    
+    /**
+     * Crea una persistencia para el acceso y registro de ventas de productos
+     * a traves de la conexion a la base de datos dada.
+     * @param conexion Conexion a la base de datos de abarrotes
+     */
+    public PersistenciaListas(ConexionAbarrotesBD conexion) {
+        this.catalogoProductos = new Productos(conexion);
+        this.registroVentasGranel = new MovimientosGranel();
+        this.registroComprasGranel = new MovimientosGranel();
+        this.inventarioProductosGranel = new ProductosGranel();
+        this.registroVentasEmpacados = new MovimientosEmpacados();
+        this.registroComprasEmpacados = new MovimientosEmpacados();
+        this.inventarioProductosEmpacados = new ProductosEmpacados();
+    }
+    
 
     /**
      * Metodo el cual permite obtener el producto del parametro dado, siempre y
@@ -55,9 +73,18 @@ public class PersistenciaListas implements IPersistencia {
     @Override
     public Producto obten(Producto producto) throws PersistenciaException {
         try {
-            return catalogoProductos.obten(producto);
-        } catch (Exception e) {
-            throw new PersistenciaException("El Producto que se busca no existe");
+            Producto encontrado = catalogoProductos.obten(producto);
+            
+            //System.out.println(encontrado);
+            
+            if (encontrado == null) {
+                //throw new PersistenciaException("El producto no se encuentra registrado");
+                return null;
+            }
+            
+            return encontrado;
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -142,14 +169,17 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void agregar(Producto producto) throws PersistenciaException {
-        if (catalogoProductos.obten(producto) != null) {
-            try {
-                catalogoProductos.agrega(producto);
-            } catch (DAOException ex) {
-                throw new PersistenciaException(ex.getMessage());
+        try {
+            
+            Producto encontrado = catalogoProductos.obten(producto);
+            
+            if (encontrado != null) {
+                throw new PersistenciaException("El producto ya se encuentra registrado");
             }
-        } else {
-            throw new PersistenciaException("No se pudo agregar el producto");
+            
+            catalogoProductos.agrega(producto);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -273,8 +303,8 @@ public class PersistenciaListas implements IPersistencia {
     public void actualizar(Producto producto) throws PersistenciaException {
         try {
             catalogoProductos.actualiza(producto);
-        } catch (DAOException e) {
-            System.out.println(e.getMessage());
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 

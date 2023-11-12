@@ -1,18 +1,14 @@
 package control;
 
-import dao.PersistenciaListas;
-import dao.ProductosGranel;
+import conexion.ConexionAbarrotesBD;
 import excepciones.PersistenciaException;
 import interfaces.IPersistencia;
 import interfazUsuario.ConstantesGUI;
 import interfazUsuario.DlgMovimiento;
 import interfazUsuario.DlgProducto;
 import interfazUsuario.DlgPeriodo;
-import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -23,6 +19,8 @@ import objetosNegocio.ProductoEmpacado;
 import objetosNegocio.ProductoGranel;
 import objetosServicio.Fecha;
 import objetosServicio.Periodo;
+import dao.PersistenciaListas;
+import conexion.ConexionConfig;
 
 /**
  *
@@ -33,79 +31,146 @@ public class Control {
     private IPersistencia persistencia;
     private Conversiones conversiones;
 
+    public ConexionAbarrotesBD conexionBD;
+    
     /**
      * Método Constructor que crea dos instancias de las clases persistencia y
      * conversiones.
      */
     public Control() {
-        persistencia = new PersistenciaListas();
+        ConexionConfig configConexion = new ConexionConfig("abarrotes", "9999", "root", "");
+        conexionBD = new ConexionAbarrotesBD(configConexion);
+    }
+    
+    /**
+     * Inicializa la persistencia con la base de datos especificada
+     */
+    public void prepararDatos() {
+        persistencia = new PersistenciaListas(conexionBD);
         conversiones = new Conversiones();
     }
 
+    
     /**
-     * ***********************Agregar***********************
-     *
-     * Sección de la clase control donde se encuentran aquellos métodos con la
-     * funcion "Agregar".
-     *
+     * Busca un producto por su clave y lo muestra en pantalla
+     * @param frame Frame padre
      */
+    public void buscarProducto(JFrame frame) {
+        Producto producto = null, encontrado = null;
+        StringBuffer respuesta = new StringBuffer("");
+        DlgProducto dlgProducto;
+        ConstantesGUI validar = null;
+
+        //Captura la clave del producto
+        String claveProducto = JOptionPane.showInputDialog(
+                frame, 
+                "Clave del producto:", 
+                "Buscar producto", 
+                JOptionPane.QUESTION_MESSAGE
+        );
+        
+        try {
+            encontrado = persistencia.obten(new Producto(claveProducto));
+            
+            dlgProducto = new DlgProducto(
+                    frame, 
+                    "Producto buscado", 
+                    true, 
+                    encontrado, 
+                    ConstantesGUI.DESPLEGAR, 
+                    respuesta
+            );
+            
+        } catch (PersistenciaException ex) {
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(
+                    frame, 
+                    ex.getMessage(), 
+                    "Buscar producto", 
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
     
     /**
      * Método capaz de agregar un producto mediante una ventana emergente que, a
      * continuación procederá a solicitar la clave del nuevo producto, si esta
      * clave, al usar el método obtener, no obtiene un producto, el producto
      * nuevo prodrá ser creado.
-     *
      * @param frame Ventana principal.
      */
     public void agregarProducto(JFrame frame) {
-        Producto producto, bproducto = null;
+        Producto producto = null, encontrado = null;
         StringBuffer respuesta = new StringBuffer("");
-        DlgProducto dlgProducto;
+        DlgProducto dlgProducto = null;
         ConstantesGUI validar = null;
 
         //Captura la clave del producto
-        String clave = JOptionPane.showInputDialog(frame, "Clave del producto:", "Agregar Producto", JOptionPane.QUESTION_MESSAGE);
-        //Crea un objeto producto con solo la clave
+        String claveProducto = JOptionPane.showInputDialog(
+                frame, 
+                "Clave del producto:", 
+                "Agregar Producto", 
+                JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (claveProducto == null) {
+            return;
+        }
+        
+        producto = new Producto(claveProducto);
+              
         try {
-            if ((!clave.equals("") && !clave.contains(" "))) {
-
-                producto = new Producto(clave);
-
-                try {
-                    bproducto = persistencia.obten(producto);
-                } catch (PersistenciaException e) {
-                    JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
-                }
-
-                if (bproducto != null) {
-                    dlgProducto = new DlgProducto(frame, "El producto ya esta en el catalogo", true, bproducto, ConstantesGUI.DESPLEGAR, respuesta);
-                }
-
-                if (bproducto == null) {
-                    dlgProducto = new DlgProducto(frame, "Capture los datos del producto:", true, producto, ConstantesGUI.AGREGAR, respuesta);
-                    if (respuesta.substring(0).equals(ConstantesGUI.CANCELAR)) {
-                        dlgProducto.dispose();
-                        JOptionPane.showMessageDialog(frame, "Cancelado con éxito", "Cancelando...", JOptionPane.OK_CANCEL_OPTION);
-                    } else if (!(producto.getNombre().equals("") || producto.getUnidad().equals("") || String.valueOf(producto.getTipo()).equals(""))) {
-                        if (String.valueOf(producto.getTipo()).equalsIgnoreCase("E") || String.valueOf(producto.getTipo()).equalsIgnoreCase("G")) {
-                            try {
-                                persistencia.agregar(producto);
-                            } catch (PersistenciaException e) {
-                                JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(frame, "Tipo no valido", "Error!!.", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-
-                }
-
-            } else {
-                JOptionPane.showMessageDialog(frame, "Ingrese una clave valida", "Cancelando...", JOptionPane.ERROR_MESSAGE);
+            encontrado = persistencia.obten(producto);
+            
+            if (encontrado != null) {
+                throw new PersistenciaException("El producto ya se encuentra registrado");
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame, "Cancelado con éxito", "Cancelando...", JOptionPane.OK_CANCEL_OPTION);
+            
+            
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(
+                frame,
+                ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            
+            return;
+        }
+        
+        dlgProducto = new DlgProducto(
+                frame,
+                "Agregar Producto",
+                true,
+                producto,
+                ConstantesGUI.AGREGAR,
+                respuesta
+        );
+        
+        // se cancelo la operacion a traves del dialogo
+        if (dlgProducto.respuesta.toString().equals("Cancelar")) {
+            //System.out.println("TRUE");
+            return;
+        }
+        
+        try {
+            persistencia.agregar(producto);
+            
+            JOptionPane.showMessageDialog(
+                frame,
+                String.format("Se agrego el producto correctamente [CODIGO: %s]", producto.getClave()),
+                "Operacion Completada",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            
+            
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(
+                frame,
+                ex.getMessage(),
+                "Error - Agregar Producto",
+                JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
@@ -187,6 +252,7 @@ public class Control {
         DlgMovimiento dlgMovimiento = null;
         DefaultComboBoxModel<ProductoGranel> productosComboBox = null;
 
+        
         try {
             if (!persistencia.consultarProductosGranel().isEmpty()) {
 
@@ -362,51 +428,89 @@ public class Control {
      * @param frame Ventana principal.
      */
     public void actualizaProducto(JFrame frame) {
-        Producto producto, bproducto = null;
+        Producto producto = null, encontrado = null;
         StringBuffer respuesta = new StringBuffer("");
-        DlgProducto dlgproducto = null;
+        DlgProducto dlgProducto = null;
+        ConstantesGUI validar = null;
 
-        try {
-            if (!persistencia.consultarProductos().isEmpty()) {
-                String clave = JOptionPane.showInputDialog(frame, "Clave del producto:", "Actualizar Producto", JOptionPane.QUESTION_MESSAGE);
-                try {
-                    if ((!clave.equals("") && !clave.contains(" "))) {
-                        //Crea un objeto producto con solo la clave
-                        producto = new Producto(clave);
-
-                        try {
-                            bproducto = persistencia.obten(producto);
-                        } catch (PersistenciaException e) {
-                            JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
-                        }
-
-                        if (bproducto == null) {
-                            JOptionPane.showMessageDialog(frame, "El producto no existe", "Error!!.", JOptionPane.ERROR_MESSAGE);
-                        }
-
-                        if (bproducto != null) {
-                            dlgproducto = new DlgProducto(frame, "Edite los datos del producto", true, bproducto, ConstantesGUI.ACTUALIZAR, respuesta);
-
-                            try {
-                                persistencia.actualizar(bproducto);
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                        if (respuesta.substring(0).equals(ConstantesGUI.CANCELAR)) {
-                            dlgproducto.dispose();
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Ingrese una clave valida", "Cancelando...", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(frame, "Cancelado con éxito", "Cancelando...", JOptionPane.OK_CANCEL_OPTION);
-                }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame, "No hay productos", "Cancelando...", JOptionPane.ERROR_MESSAGE);
+        //Captura la clave del producto
+        String claveProducto = JOptionPane.showInputDialog(
+                frame, 
+                "Clave del producto:", 
+                "Actualizar Producto", 
+                JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (claveProducto == null) {
+            return;
         }
-
+        
+        producto = new Producto(claveProducto);
+              
+        try {
+            encontrado = persistencia.obten(producto);
+            
+            if (encontrado == null) {
+                throw new PersistenciaException("El producto no esta registrado");
+            }
+            
+            producto = encontrado;
+            
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(
+                frame,
+                ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            
+            return;
+        }
+        
+        dlgProducto = new DlgProducto(
+                frame,
+                "Actualizar Producto",
+                true,
+                producto,
+                ConstantesGUI.ACTUALIZAR,
+                respuesta
+        );
+        
+        // se cancelo la operacion a traves del dialogo
+        if (dlgProducto.respuesta.toString().equals("Cancelar")) {
+            return;
+        }
+        
+        int opcion = JOptionPane.showConfirmDialog(
+                frame, 
+                "¿Deseas actualizar los datos del producto?", 
+                "Actualizar Producto", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        
+        // si no se confimar, cierra el dialogo...
+        if (opcion == JOptionPane.NO_OPTION || opcion == JOptionPane.DEFAULT_OPTION) {
+            return;
+        }
+        
+        try {
+            persistencia.actualizar(producto);
+            
+            JOptionPane.showMessageDialog(
+                frame,
+                String.format("Se actualizaron los datos del producto [CODIGO: %s]", producto.getClave()),
+                "Operacion Completada",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(
+                frame,
+                ex.getMessage(),
+                "Error - Actualizar Producto",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     /**
@@ -796,39 +900,92 @@ public class Control {
      * @param frame Ventana Principal.
      */
     public void eliminarProducto(JFrame frame) {
-        Producto producto, bproducto = null;
+        Producto producto = null, encontrado = null;
         StringBuffer respuesta = new StringBuffer("");
-        DlgProducto dlgproducto;
-        try {
-            if (!persistencia.consultarProductos().isEmpty()) {
-                String clave = JOptionPane.showInputDialog(frame, "Clave del producto:", "Agregar Producto", JOptionPane.QUESTION_MESSAGE);
+        DlgProducto dlgProducto = null;
+        ConstantesGUI validar = null;
 
-                //Crea un objeto producto con solo la clave
-                producto = new Producto(clave);
-
-                try {
-                    bproducto = persistencia.obten(producto);
-                } catch (PersistenciaException e) {
-                    JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
-                }
-
-                if (bproducto == null) {
-                    // despliega mensaje de error
-                    JOptionPane.showMessageDialog(frame, "El producto no existe", "Error!!.", JOptionPane.ERROR_MESSAGE);
-                }
-
-                if (bproducto != null) {
-                    try {
-                        persistencia.eliminar(producto);
-                    } catch (PersistenciaException e) {
-                        JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame, "No existen productos", "Error!!.", JOptionPane.ERROR_MESSAGE);
+        //Captura la clave del producto
+        String claveProducto = JOptionPane.showInputDialog(
+                frame, 
+                "Clave del producto:", 
+                "Eliminar Producto", 
+                JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (claveProducto == null) {
+            return;
         }
         
+        producto = new Producto(claveProducto);
+              
+        try {
+            encontrado = persistencia.obten(producto);
+            
+            if (encontrado == null) {
+                throw new PersistenciaException("El producto no se encuentra registrado");
+            }
+            
+            producto = encontrado;
+            
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(
+                frame,
+                ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            
+            return;
+        }
+        
+        dlgProducto = new DlgProducto(
+                frame,
+                "Eliminar Producto",
+                true,
+                producto,
+                ConstantesGUI.ELIMINAR,
+                respuesta
+        );
+        
+        // se cancelo la operacion a traves del dialogo
+        if (dlgProducto.respuesta.toString().equals("Cancelar")) {
+            //System.out.println("TRUE");
+            return;
+        }
+        
+        int opcion = JOptionPane.showConfirmDialog(
+                frame, 
+                "¿Deseas eliminar el producto?", 
+                "Eliminar Producto", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        
+        // si no se confimar, cierra el dialogo...
+        if (opcion == JOptionPane.NO_OPTION || opcion == JOptionPane.DEFAULT_OPTION) {
+            return;
+        }
+        
+        try {
+            persistencia.eliminar(producto);
+            
+            JOptionPane.showMessageDialog(
+                frame,
+                String.format("Producto eliminado [CODIGO: %s]", producto.getClave()),
+                "Operacion Completada",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+            
+            
+        } catch (PersistenciaException ex) {
+            JOptionPane.showMessageDialog(
+                frame,
+                ex.getMessage(),
+                "Error - Eliminar Producto",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     /**

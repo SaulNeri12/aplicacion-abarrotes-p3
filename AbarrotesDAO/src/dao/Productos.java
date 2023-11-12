@@ -21,7 +21,7 @@ import plantillas.ModificacionesAbarrotes;
  * de datos Abarrotes.
  * @author Saul Neri
  */
-public class Productos extends Producto {
+public class Productos {
     
     private ConexionAbarrotesBD conexionBD;
     // donde se alojaran los productos que se vayan guardando con la PAGINACION
@@ -48,16 +48,15 @@ public class Productos extends Producto {
     /** 
      * Obtiene el producto especificado de la base de datos
      * @param producto producto a buscar
-     * @return Devuelve el producto si se encuentra en la base de datos
+     * @return Devuelve el producto si se encuentra en la base de datos o null si no lo encuentra
+     * @throws excepciones.DAOException Si ocurre un error de busqueda
      */
-    public Producto obten(Producto producto){
+    public Producto obten(Producto producto) throws DAOException {
         Producto productoEncontrado = null;
         
-        PreparedStatement stmt;        
-        ResultSet rs;
-
         try {
-            stmt = this.conexionBD.getConexionMySQL().prepareStatement(
+            
+            PreparedStatement stmt = this.conexionBD.getConexionMySQL().prepareStatement(
                     ConsultasAbarrotes.PRODUCTOS_POR_CLAVE, 
                     ResultSet.TYPE_SCROLL_SENSITIVE, 
                     ResultSet.CONCUR_UPDATABLE
@@ -65,7 +64,9 @@ public class Productos extends Producto {
             
             stmt.setString(1, producto.getClave());
             
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            
+            //System.out.println();
             
             // si no existe el producto...
             if (!rs.next()) {
@@ -92,16 +93,18 @@ public class Productos extends Producto {
                     unidad
             );
             
+            
             rs.close();
             stmt.close();
             
             return productoEncontrado;
             
         } catch (SQLException ex) {
-            System.out.println("#" + ex);
+            throw new DAOException(ex.getMessage());
+            //throw new DAOException("Ocurrio un error de busqueda");    
+            //System.out.println("#" + ex);
         }
-        
-        return null; // no encontrado
+        //return null; // no encontrado
     }
     
     /** 
@@ -127,10 +130,7 @@ public class Productos extends Producto {
             stmt.close();
 
         } catch (SQLException ex) {
-            //System.out.println("#" + ex.getClass());
-            if (ex.getClass().equals(SQLIntegrityConstraintViolationException.class)) {
-                throw new DAOException("El producto dado ya se encuentra registrado");
-            }
+            throw new DAOException(ex.getMessage());
         }
     }
     
@@ -163,7 +163,7 @@ public class Productos extends Producto {
             stmt.close();
 
         } catch (SQLException ex) {
-            System.out.println("#" + ex.getClass());
+            //System.out.println("#" + ex.getClass());
             throw new DAOException("No se pudo actualizar el producto debido a un error, intentelo mas tarde...");
         }
     }
@@ -194,7 +194,7 @@ public class Productos extends Producto {
             stmt.close();
 
         } catch (SQLException ex) {
-            System.out.println("#" + ex.getClass());
+            //System.out.println("#" + ex.getClass());
             throw new DAOException("No se pudo eliminar el producto debido a un error, intentelo mas tarde...");
         }
     }
