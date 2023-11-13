@@ -48,5 +48,5 @@ CREATE TABLE IF NOT EXISTS usuarios (
     telefono VARCHAR(15) NOT NULL,
     email VARCHAR(50) NOT NULL,
 	contrasena VARCHAR(30) NOT NULL,
-    rol ENUM('administrador', 'repartidor')
+    rol ENUM('administrador', 'repartidor') NOT NULL
 );
