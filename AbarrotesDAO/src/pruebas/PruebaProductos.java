@@ -7,11 +7,14 @@ package pruebas;
 import conexion.ConexionAbarrotesBD;
 import conexion.ConexionConfig;
 import dao.Productos;
+import dao.Usuarios;
 import excepciones.DAOException;
 import excepciones.ErrorConexionException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objetosNegocio.Producto;
+import objetosNegocio.Usuario;
 
 /**
  *
@@ -27,6 +30,7 @@ public class PruebaProductos {
             Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        /**
         Productos productos = new Productos(conn);
         
         Producto p;
@@ -68,6 +72,68 @@ public class PruebaProductos {
             productos.elimina(p);
         } catch (DAOException ex) {
             Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        * */
+        
+        Usuarios usuarios = new Usuarios(conn);
+        
+        Usuario usr = new Usuario(
+                "92199192",
+                "Juan de la barrera",
+                "64412388128",
+                "pedroshesh124@gmail.com",
+                "administrador"
+        );
+        
+        usr.setContrasena("nmap12345");
+        
+        Usuario shesh = null;
+        
+        try {
+            shesh = usuarios.obten(usr);
+            System.out.println(shesh);
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        try {
+            usuarios.agregar(usr);
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //usr.setNombre("Saul Neri");
+        //usr.setRolUsuario("asaosoaoslls");
+        
+        /*
+        try {
+            usuarios.actualiza(usr);
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        try {
+            usuarios.elimina(usr);
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        */
+        
+        try {
+            usuarios.consultaUsuarios(); // se cargan 20
+            usuarios.consultaUsuarios(); // se cargan OTROS 20...
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        int i = 1;
+        
+        for (Usuario u: usuarios.lista()) {
+            System.out.println(i + "# " + u);
+            
+            i++;
         }
         
         try {

@@ -7,6 +7,6 @@ package plantillas;
  * @author Saul Neri
  */
 public class ModificacionesAbarrotes {
-    public static String ACTUALIZAR_PRODUCTO = "UPDATE Productos SET nombre = ?, tipo = ?, unidad = ? WHERE clave_producto = ?";
-    
+    public static String ACTUALIZAR_PRODUCTO    = "UPDATE Productos SET nombre = ?, tipo = ?, unidad = ? WHERE clave_producto = ?";
+    public static String ACTUALIZAR_USUARIO     = "UPDATE Usuarios SET nombre = ?, telefono = ?, email = ?, contrasena = ?, rol = ? WHERE id = ?";
 }

@@ -9,8 +9,6 @@ import conexion.ConexionAbarrotesBD;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import plantillas.ConsultasAbarrotes;
 import plantillas.EliminacionesAbarrotes;
 import plantillas.InsercionesAbarrotes;
