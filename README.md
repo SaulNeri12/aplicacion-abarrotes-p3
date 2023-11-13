@@ -22,7 +22,13 @@ El archivo **"launch.bat"** busca si se encuentra un archivo JAR ejecutable de l
 ### Por hacer (PRIMER AVANCE) (TODOs) 
 - [x] Definir el primer diseño (PROTOTIPO) de la base de datos (definir los roles del usuario de la aplicacion y las llaves foraneas de las tablas en SQL) *[Jesus, para el 6 de Noviembre, maximo el 8 de Noviembre]*.
 - [x] Crear la libreria final que se conecta a la base de datos *[Saul, para el 6 de Noviembre]*.
-- [ ] Modificar la libreria **AbarrotesDAO** para que trabaje sobre la base de datos *[Saul, para el 8 de Noviembre, maximo el 10 de Noviembre]*.
+- [ ] Modificar la libreria **AbarrotesDAO** para que trabaje sobre la base de datos *[Saul, para el 8 de Noviembre, maximo el 10 de Noviembre]*
+  - [x] Productos
+  - [x] Usuarios
+  - [ ] Productos Empacados
+  - [ ] Productos a Granel
+  - [ ] Movimientos Productos Empacados
+  - [ ] Movimientos Productos a Granel
 - [ ] Hacer las **PRUEBAS UNITARIAS** de la nueva libreria modificada **AbarrotesDAO** [Damian, necesita **AbarrotesDAO** actualizado para realizarlo, maximo para el 10 de Noviembre].
 - [ ] Hacer la interfaz de **Login** y de **Registro** de la aplicacion *[Nomar, para el 9 de Noviembre]*.
 - [ ] Añadirle funcionalidad al **Login** (Validacion con expresiones regulares en campos y busqueda en base de datos) *[Nomar, para el 13 de Noviembre]*.
