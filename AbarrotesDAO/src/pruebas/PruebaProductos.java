@@ -10,11 +10,13 @@ import dao.Productos;
 import dao.Usuarios;
 import excepciones.DAOException;
 import excepciones.ErrorConexionException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objetosNegocio.Producto;
 import objetosNegocio.Usuario;
+import plantillas.ValidacionesAbarrotes;
 
 /**
  *
@@ -78,14 +80,22 @@ public class PruebaProductos {
         Usuarios usuarios = new Usuarios(conn);
         
         Usuario usr = new Usuario(
-                "92199192",
+                921991,
                 "Juan de la barrera",
                 "64412388128",
                 "pedroshesh124@gmail.com",
                 "administrador"
         );
         
-        usr.setContrasena("nmap12345");
+        String hashedPasswd;
+        try {
+            hashedPasswd = ValidacionesAbarrotes.hashearContrasena("shesh12345");
+            usr.setContrasena(hashedPasswd);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         
         Usuario shesh = null;
         

@@ -66,7 +66,7 @@ public class Usuarios {
                     ResultSet.CONCUR_UPDATABLE
             );
             
-            stmt.setString(1, usuario.getId());
+            stmt.setInt(1, usuario.getId());
             
             ResultSet rs = stmt.executeQuery();
             
@@ -83,11 +83,12 @@ public class Usuarios {
             rs.first();
             
             // obtiene los datos del primer producto encontrado encontrado
-            String id = rs.getString("id");
+            int id = rs.getInt("id");
             String nombre = rs.getString("nombre");
             String telefono = rs.getString("telefono");
             String email = rs.getString("email");
             String rolUsuario = rs.getString("rol");
+            String contrasena = rs.getString("contrasena");
             
             usuarioEncontrado = new Usuario(
                     id,
@@ -97,6 +98,7 @@ public class Usuarios {
                     rolUsuario
             );
             
+            usuarioEncontrado.setContrasena(contrasena);
             
             rs.close();
             stmt.close();
@@ -122,7 +124,7 @@ public class Usuarios {
         try {
             stmt = this.conexionBD.getConexionMySQL().prepareStatement(InsercionesAbarrotes.REGISTRAR_USUARIO);
             
-            stmt.setString(1, usuario.getId());
+            stmt.setInt(1, usuario.getId());
             stmt.setString(2, usuario.getNombre());
             stmt.setString(3, usuario.getTelefono());
             stmt.setString(4, usuario.getEmail());
@@ -170,7 +172,7 @@ public class Usuarios {
             stmt.setString(4, usuario.getContrasena());
             stmt.setString(5, usuario.getRolUsuario());
             // WHERE id = ?...
-            stmt.setString(6, usuario.getId());
+            stmt.setInt(6, usuario.getId());
             
             int numModificados = stmt.executeUpdate();
 
@@ -202,7 +204,7 @@ public class Usuarios {
             stmt = this.conexionBD.getConexionMySQL().prepareStatement(EliminacionesAbarrotes.ELIMINAR_USUARIO);
             
             // WHERE id = ? ...
-            stmt.setString(1, usuario.getId());
+            stmt.setInt(1, usuario.getId());
             
             int numEliminados = stmt.executeUpdate();
 
@@ -252,7 +254,7 @@ public class Usuarios {
             while (rs.next()) {
 
                 // obtiene los datos del primer producto encontrado encontrado
-                String id = rs.getString("id");
+                int id = rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 String telefono = rs.getString("telefono");
                 String email = rs.getString("email");
