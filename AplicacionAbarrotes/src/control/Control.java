@@ -21,6 +21,9 @@ import objetosServicio.Fecha;
 import objetosServicio.Periodo;
 import dao.PersistenciaListas;
 import conexion.ConexionConfig;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import objetosNegocio.Usuario;
 
 /**
  *
@@ -32,6 +35,8 @@ public class Control {
     private Conversiones conversiones;
 
     public ConexionAbarrotesBD conexionBD;
+    
+    public Usuario operador;
     
     /**
      * Método Constructor que crea dos instancias de las clases persistencia y
@@ -50,6 +55,50 @@ public class Control {
         conversiones = new Conversiones();
     }
 
+    /**
+     * Asigna el operador actual del sistema
+     * @param usuario Usuario que operara el sistema
+     */
+    public void setOperador(Usuario usuario) {
+        this.operador = usuario;
+    }
+    
+    /**
+     * Devuelve el operador del sistema
+     * @return Operador
+     */
+    public Usuario getOperador() {
+        return this.operador;
+    }
+    
+    /**
+     * Recoje el usuario del dialogo de Login y verifica los datos para validar
+     * el ID y contrasena para su posterior intento de inicio de sesion
+     * @param frame Frame padre
+     * @param usuario Usuario que quiere iniciar sesion
+     * @return Usuario encontrado
+     * @throws PersistenciaException si el usuario no existe
+     */
+    public Usuario iniciarSesion(JFrame frame, Usuario usuario) throws PersistenciaException {
+        Usuario encontrado = null;
+        
+        try {
+            encontrado = persistencia.obten(usuario);
+            
+            if (encontrado == null) {
+                throw new PersistenciaException("El usuario no existe");
+            }
+                    
+            if (!usuario.getContrasena().equalsIgnoreCase(encontrado.getContrasena())) {
+                throw new PersistenciaException("Contrasena incorrecta");
+            }
+            
+            return encontrado;
+            
+        } catch (PersistenciaException ex) {
+            throw new PersistenciaException(ex.getMessage());
+        }
+    }
     
     /**
      * Busca un producto por su clave y lo muestra en pantalla
@@ -72,6 +121,10 @@ public class Control {
         try {
             encontrado = persistencia.obten(new Producto(claveProducto));
             
+            if (encontrado == null) {
+                throw new PersistenciaException("El producto no se encuentra registrado");
+            }
+            
             dlgProducto = new DlgProducto(
                     frame, 
                     "Producto buscado", 
@@ -82,7 +135,7 @@ public class Control {
             );
             
         } catch (PersistenciaException ex) {
-            System.out.println(ex);
+            //System.out.println(ex);
             JOptionPane.showMessageDialog(
                     frame, 
                     ex.getMessage(), 
@@ -149,7 +202,6 @@ public class Control {
         
         // se cancelo la operacion a traves del dialogo
         if (dlgProducto.respuesta.toString().equals("Cancelar")) {
-            //System.out.println("TRUE");
             return;
         }
         

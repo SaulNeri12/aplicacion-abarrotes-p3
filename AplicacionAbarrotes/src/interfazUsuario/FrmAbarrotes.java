@@ -11,6 +11,7 @@ import control.Control;
 import control.Conversiones;
 import dao.PersistenciaListas;
 import excepciones.ErrorConexionException;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -21,7 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class FrmAbarrotes extends javax.swing.JFrame {
     private javax.swing.JTable tabla;
-    Control control = new Control(); 
+    public Control control = new Control(); 
 
     /**
      * Constructor de la ventana principal.
@@ -43,6 +44,8 @@ public class FrmAbarrotes extends javax.swing.JFrame {
             
             System.exit(0);
         }
+        
+        
     }
     
     /** 
@@ -1035,10 +1038,29 @@ public class FrmAbarrotes extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        FrmAbarrotes app = new FrmAbarrotes();
+        
+        Login login = new Login(app, true, app.control);
+        
+        //login.setVisible(true);
+        
+        System.out.println(login.respuesta.toString());
+        
+        // sale de la aplicacion si se presiona el boton "Cancelar"
+        if (login.respuesta.toString().equals("Cancelar")) {
+            System.out.println("....");
+            System.exit(0);
+        }
+        
+        app.control.setOperador(login.usuario);
+
+        //System.out.println("operador: " + app.control.operador);
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmAbarrotes().setVisible(true);
+                //new FrmAbarrotes().setVisible(true);
+                app.setVisible(true);
             }
         });
     }

@@ -43,10 +43,12 @@ CREATE TABLE IF NOT EXISTS MovimientosGranel (
 );
 
 CREATE TABLE IF NOT EXISTS usuarios (
-	id VARCHAR(10) PRIMARY KEY,
+	id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     telefono VARCHAR(15) NOT NULL,
     email VARCHAR(50) NOT NULL,
-	contrasena VARCHAR(30) NOT NULL,
+	contrasena VARCHAR(65) NOT NULL,
     rol ENUM('administrador', 'repartidor') NOT NULL
-);
+) AUTO_INCREMENT = 100000;
+
+
