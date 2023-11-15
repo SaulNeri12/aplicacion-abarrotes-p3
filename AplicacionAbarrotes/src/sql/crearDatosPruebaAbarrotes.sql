@@ -10,132 +10,29 @@ VALUES ('AMC0102', 'Sal', 'G', 'Kg');
 INSERT INTO Productos (clave_producto, nombre, tipo, unidad) 
 VALUES ('AMC0103', 'Azucar', 'G', 'Kg');
 
+-- insercion de usuarios
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Ana Gonzalez', '79121003', 'ana.gonzalez@gmail.com', 'a1b2c3d4', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Carlos Rodriguez', '612345678', 'carlos.rodriguez@gmail.com', 'e5f6g7h8', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Maria Lopez', '712345678', 'maria.lopez@gmail.com', 'i9j0k1l2', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Javier Martinez', '823456789', 'javier.martinez@gmail.com', 'm3n4o5p6', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Laura Perez', '934567890', 'laura.perez@gmail.com', 'q7r8s9t0', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Daniel Sanchez', '545678901', 'daniel.sanchez@gmail.com', 'u1v2w3x4', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Marta Gonzalez', '656789012', 'marta.gonzalez@gmail.com', 'y5z6a1b2', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Pedro Rodriguez', '767890123', 'pedro.rodriguez@gmail.com', 'c3d4e5f6', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Carmen Lopez', '878901234', 'carmen.lopez@gmail.com', 'g7h8i9j0', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Antonio Martinez', '989012345', 'antonio.martinez@gmail.com', 'k1l2m3n4', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Sara Perez', '109123456', 'sara.perez@gmail.com', 'o5p6q7r8', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Jorge Sanchez', '120234567', 'jorge.sanchez@gmail.com', 's9t0u1v2', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Elena Gonzalez', '231345678', 'elena.gonzalez@gmail.com', 'w3x4y5z6', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Luis Rodriguez', '342456789', 'luis.rodriguez@gmail.com', 'a1b2c3d4', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Ana Maria Lopez', '453567890', 'ana.lopez@gmail.com', 'e5f6g7h8', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Carlos Javier Martinez', '564678901', 'carlos.martinez@gmail.com', 'i9j0k1l2', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Maria Laura Perez', '675789012', 'maria.perez@gmail.com', 'm3n4o5p6', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Javier Daniel Sanchez', '786890123', 'javier.sanchez@gmail.com', 'q7r8s9t0', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Laura Marta Gonzalez', '897901234', 'laura.gonzalez@gmail.com', 'u1v2w3x4', 'repartidor');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Daniel Pedro Rodriguez', '908012345', 'daniel.rodriguez@gmail.com', 'y5z6a1b2', 'administrador');
+INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Marta Carmen Lopez', '111123456', 'marta.lopez@gmail.com', 'c3d4e5f6', 'repartidor');
 
+UPDATE Usuarios SET contrasena = 'd785d63511a645a24875a109e0ef1da6560dd94d149b6734949a96556cb3449f';
 
--- INSERCION DE USUARIOS DE PRUEBA
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol)
-VALUES ('91929129', 'Juan Shesh', '7271727712', 'nasjansjsjnjk@gmail.com', '9sajskjksajs2213', 'administrador');
-
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol)
-VALUES ('12129192', 'Miguel Antonio Perez', '725353412', 'nasddnjk@gmail.com', '9sajskjksajs2213', 'administrador');
-
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol)
-VALUES ('91929129', 'Pedro Salcido Perez Shesh', '79121002', 'nooo2345@gmail.com', '9sajskjksajs2213', 'repartidor');
-
--- Variante 1
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('91929129', 'Pedro Salcido Perez Shesh', '79121002', 'nooo2345@gmail.com', '9sajskjksajs2213', 'repartidor');
-
--- Variante 2
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('82929292', 'Ana Gonzalez', '79121003', 'ana.gonzalez@gmail.com', 'a1b2c3d4', 'repartidor');
-
--- Variante 3
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('73939393', 'Luis Torres', '79121004', 'luis.torres@gmail.com', 'password123', 'repartidor');
-
--- Variante 4
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('64949494', 'Laura Rodriguez', '79121005', 'laura.rodriguez@gmail.com', 'securepass', 'repartidor');
-
--- Variante 5
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('55959595', 'Carlos Mendez', '79121006', 'carlos.mendez@gmail.com', '123abc', 'repartidor');
-
--- Variante 6
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('46969696', 'Maria Sanchez', '79121007', 'maria.sanchez@gmail.com', 'pass456', 'repartidor');
-
--- Variante 7
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('37979797', 'Javier Gutierrez', '79121008', 'javier.gutierrez@gmail.com', 'gutierrez1', 'repartidor');
-
--- Variante 8
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('28989898', 'Carmen Lopez', '79121009', 'carmen.lopez@gmail.com', 'mysecretpass', 'repartidor');
-
--- Variante 9
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('19999999', 'Juan Perez', '79121010', 'juan.perez@gmail.com', 'juan123', 'repartidor');
-
--- Variante 10
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('10101010', 'Isabel Ramirez', '79121011', 'isabel.ramirez@gmail.com', 'ramirezpass', 'repartidor');
-
--- Variante 11
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('11111111', 'Sofia Diaz', '79121012', 'sofia.diaz@gmail.com', 'diaz789', 'repartidor');
-
--- Variante 12
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('12121212', 'Ricardo Juarez', '79121013', 'ricardo.juarez@gmail.com', 'juarezpass', 'repartidor');
-
--- Variante 13
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('13131313', 'Fernanda Ortega', '79121014', 'fernanda.ortega@gmail.com', 'ortega123', 'repartidor');
-
--- Variante 14
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('14141414', 'Arturo Vargas', '79121015', 'arturo.vargas@gmail.com', 'vargaspass', 'repartidor');
-
--- Variante 15
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('15151515', 'Monica Soto', '79121016', 'monica.soto@gmail.com', 'soto456', 'repartidor');
-
--- Variante 16
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('16161616', 'Alejandro Mendoza', '79121017', 'alejandro.mendoza@gmail.com', 'mendoza1', 'repartidor');
-
--- Variante 17
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('17171717', 'Daniela Guzman', '79121018', 'daniela.guzman@gmail.com', 'guzmanpass', 'repartidor');
-
--- Variante 18
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('18181818', 'Roberto Navarro', '79121019', 'roberto.navarro@gmail.com', 'navarro789', 'repartidor');
-
--- Variante 19
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('19191919', 'Elena Jimenez', '79121020', 'elena.jimenez@gmail.com', 'jimenezpass', 'repartidor');
-
--- Variante 20
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('20202020', 'Hector Rios', '79121021', 'hector.rios@gmail.com', 'rios123', 'repartidor');
-
-
-
-
--- Variante 1
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('92929292', 'Pedro Soto', '7271727713', 'pedro.soto@gmail.com', 'a1b2c3d4', 'administrador');
-
--- Variante 2
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('93939393', 'Laura Ramirez', '7271727714', 'laura.ramirez@gmail.com', 'password123', 'administrador');
-
--- Variante 3
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('94949494', 'Carmen Gutierrez', '7271727715', 'carmen.gutierrez@gmail.com', 'securepass', 'administrador');
-
--- Variante 4
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('95959595', 'Carlos Mendoza', '7271727716', 'carlos.mendoza@gmail.com', '123abc', 'administrador');
-
--- Variante 5
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('96969696', 'Isabel Torres', '7271727717', 'isabel.torres@gmail.com', 'pass456', 'administrador');
-
--- Variante 6
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('97979797', 'Fernando Gonzalez', '7271727718', 'fernando.gonzalez@gmail.com', 'gutierrez1', 'administrador');
-
--- Variante 7
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('98989898', 'Ana Maria Juarez', '7271727719', 'ana.juarez@gmail.com', 'mysecretpass', 'administrador');
-
--- Variante 8
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('99999999', 'Roberto Navarro', '7271727720', 'roberto.navarro@gmail.com', 'juan123', 'administrador');
-
--- Variante 9
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('10101010', 'Sofia Diaz', '7271727721', 'sofia.diaz@gmail.com', 'ramirezpass', 'administrador');
-
--- Variante 10
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('11111111', 'Ricardo Ortega', '7271727722', 'ricardo.ortega@gmail.com', 'juarezpass', 'administrador');
-
--- Variante 11
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('12121212', 'Monica Vargas', '7271727723', 'monica.vargas@gmail.com', 'ortega123', 'administrador');
-
--- Variante 12
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('13131313', 'Alejandra Mendez', '7271727724', 'alejandra.mendez@gmail.com', 'vargaspass', 'administrador');
-
--- Variante 13
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('14141414', 'Hector Lopez', '7271727725', 'hector.lopez@gmail.com', 'soto456', 'administrador');
-
--- Variante 14
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('15151515', 'Daniela Torres', '7271727726', 'daniela.torres@gmail.com', 'mendoza1', 'administrador');
-
--- Variante 15
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('16161616', 'Luis Soto', '7271727727', 'luis.soto@gmail.com', 'guzmanpass', 'administrador');
-
--- Variante 16
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('17171717', 'Elena Guzman', '7271727728', 'elena.guzman@gmail.com', 'navarro789', 'administrador');
-
--- Variante 17
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('18181818', 'Arturo Jimenez', '7271727729', 'arturo.jimenez@gmail.com', 'jimenezpass', 'administrador');
-
--- Variante 18
-INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES ('19191919', 'Juanita Vargas', '7271727730', 'juanita.vargas@gmail.com', 'rios123', 'administr
 
