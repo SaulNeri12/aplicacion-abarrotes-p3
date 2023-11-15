@@ -11,18 +11,18 @@ public class Usuario {
     public static int REPARTIDOR    = 0;
     public static int ADMINISTRADOR = 1;
     
-    private String id;
+    private int id;
     private String nombre;
     private String telefono;
     private String email;
     private String rol;
-    private String contrasena;
+    private String contrasena = "user";
     
     /**
      * Crea una instancia de un usuario a partir de su ID
      * @param id ID del usuario
      */
-    public Usuario(String id) {
+    public Usuario(int id) {
         this.id = id;
     }
     
@@ -31,8 +31,9 @@ public class Usuario {
      * @param id ID del usuario
      * @param nombre Nombre de usuario
      */
-    public Usuario(String id, String nombre) {
+    public Usuario(int id, String nombre) {
         this.nombre = nombre;
+        this.id = id;
     }
     
     /**
@@ -44,7 +45,7 @@ public class Usuario {
      * @param email Correo electronico del usuario
      * @param rol Rol del usuario (administrador o repartidor)
      */
-    public Usuario(String id, String nombre, String telefono, String email, String rol) {
+    public Usuario(int id, String nombre, String telefono, String email, String rol) {
         this.id = id;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -57,7 +58,7 @@ public class Usuario {
      * Devuelve el identificador del usuario
      * @return ID
      */
-    public String getId() {
+    public int getId() {
         return this.id;
     }
     
@@ -105,7 +106,7 @@ public class Usuario {
      * Asigna el identificador del usuario
      * @param id ID de usuario
      */
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
     

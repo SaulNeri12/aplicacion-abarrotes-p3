@@ -6,6 +6,7 @@ import objetosNegocio.MovimientoGranel;
 import objetosNegocio.Producto;
 import objetosNegocio.ProductoEmpacado;
 import objetosNegocio.ProductoGranel;
+import objetosNegocio.Usuario;
 import objetosServicio.Periodo;
 
 /**
@@ -16,6 +17,39 @@ import objetosServicio.Periodo;
 public interface IPersistencia {
     
     /////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Devuelve el usuario especificado si se aloja en la base de datos de abarrotes
+     * @param usuario Usuario a buscar
+     * @return Usuario si se encuentra registrado
+     * @throws PersistenciaException Si ocurre un error interno en la busqueda
+     */
+    public Usuario obten(Usuario usuario) throws PersistenciaException;
+    
+    /**
+     * Agrega el usuario dado a la base de datos de abarrotes
+     * @param usuario Usuario a registrar
+     * @throws PersistenciaException Si el usuario ya esta registrado o si ocurre
+     * error interno
+     */
+    public void agregar(Usuario usuario) throws PersistenciaException;
+    
+    /**
+     * Actualiza los datos del usuario especificado en la base de datos de abarrotes
+     * @param usuario Usuario a actualizar datos
+     * @throws PersistenciaException Si no se encuentra registrado el usuario o si
+     * ocurre un error interno
+     */
+    public void actualizar(Usuario usuario) throws PersistenciaException;
+    
+    /**
+     * Elimina el usuario de la base de datos de abarrotes
+     * @param usuario Usuario a eliminar
+     * @throws PersistenciaException Si el usuario no existe o si ocurre un 
+     * error interno en la eliminacion del usuario
+     */
+    public void eliminar(Usuario usuario) throws PersistenciaException;
+    
     
      /**
      * Metodo el cual permite obtener el producto del parametro dado,

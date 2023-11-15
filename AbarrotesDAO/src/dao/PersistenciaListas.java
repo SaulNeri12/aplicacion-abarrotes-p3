@@ -13,6 +13,7 @@ import objetosNegocio.MovimientoGranel;
 import objetosNegocio.Producto;
 import objetosNegocio.ProductoEmpacado;
 import objetosNegocio.ProductoGranel;
+import objetosNegocio.Usuario;
 import objetosServicio.Periodo;
 
 /**
@@ -30,20 +31,7 @@ public class PersistenciaListas implements IPersistencia {
     private MovimientosEmpacados registroComprasEmpacados;
     private ProductosEmpacados inventarioProductosEmpacados;
 
-    /**
-     * Constructor el cual crea intanbcias de Productos, Productos
-     * Empacados/Granel y Movimiento Empacado/Granel
-     
-    public PersistenciaListas() {
-        this.catalogoProductos = new Productos();
-        this.registroVentasGranel = new MovimientosGranel();
-        this.registroComprasGranel = new MovimientosGranel();
-        this.inventarioProductosGranel = new ProductosGranel();
-        this.registroVentasEmpacados = new MovimientosEmpacados();
-        this.registroComprasEmpacados = new MovimientosEmpacados();
-        this.inventarioProductosEmpacados = new ProductosEmpacados();
-    }
-    */
+    private Usuarios usuarios;
     
     /**
      * Crea una persistencia para el acceso y registro de ventas de productos
@@ -58,9 +46,92 @@ public class PersistenciaListas implements IPersistencia {
         this.registroVentasEmpacados = new MovimientosEmpacados();
         this.registroComprasEmpacados = new MovimientosEmpacados();
         this.inventarioProductosEmpacados = new ProductosEmpacados();
+        this.usuarios = new Usuarios(conexion);
     }
     
+    /**
+     * Obtiene el usuario almacenado en la base de datos a traves del dado
+     * como parametro
+     * @param usuario Usuario a buscar
+     * @return Objeto Usuario si lo encuentra, caso contrario devuelve null
+     * @throws PersistenciaException Si ocurrio un error interno
+     */
+    public Usuario obten(Usuario usuario) throws PersistenciaException {
+        Usuario encontrado = null;
+        try {
+            encontrado = usuarios.obten(usuario);
+            
+            if (encontrado == null) {
+                return null;
+            }
+            
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
+        }
+        
+        return encontrado;
+    }
 
+    /**
+     * Agrega un usuario a la base de datos de abarrotes
+     * @param usuario Usuario a registrar
+     * @throws PersistenciaException Si ocurre un error interno al registrar
+     * al usuario
+     */
+    public void agregar(Usuario usuario) throws PersistenciaException {
+        try {
+            usuarios.agregar(usuario);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
+        }
+    }
+    
+    /**
+     * Actualiza los datos de un usuario ya existente en la base de datos de abarrotes
+     * @param usuario Usuario a actualizar
+     * @throws PersistenciaException Si el usuario ya esta registrado u ocurre un error
+     * interno
+     */
+    public void actualizar(Usuario usuario) throws PersistenciaException {
+        Usuario encontrado = null;
+        
+        try {
+            encontrado = usuarios.obten(usuario);
+            
+            if (encontrado == null) {
+                throw new PersistenciaException("El usuario que se quiere actualizar sus datos no esta registrado");
+            }
+            
+            usuarios.actualiza(usuario);
+            
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
+        }
+    }
+    
+    /**
+     * Elimina un usuario de la base de datos de abarrotes
+     * @param usuario Usuario a eliminar
+     * @throws PersistenciaException Si el usuario no existe u ocurre un error 
+     * interno
+     */
+    public void eliminar(Usuario usuario) throws PersistenciaException {
+        Usuario encontrado = null;
+        
+        try {
+            encontrado = usuarios.obten(usuario);
+            
+            if (encontrado == null) {
+                throw new PersistenciaException("El usuario que se quiere eliminar no esta registrado");
+            }
+            
+            usuarios.elimina(encontrado);
+            
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
+        }
+    }
+    
     /**
      * Metodo el cual permite obtener el producto del parametro dado, siempre y
      * cuando este si exista dentro de la lista a solicitar.
