@@ -9,6 +9,7 @@ package plantillas;
  */
 public class EliminacionesAbarrotes {
     public static String ELIMINAR_PRODUCTO_EMPACADO = "DELETE FROM ProductosEmpacados WHERE clave_producto = ?";
+    public static String ELIMINAR_PRODUCTO_GRANEL = "DELETE FROM ProductosGranel WHERE clave_producto = ?";
     public static String ELIMINAR_PRODUCTO      = "DELETE FROM Productos WHERE clave_producto = ?";
     public static String ELIMINAR_MOVIMIENTO    = "DELETE FROM Movimientos WHERE clave_movimiento = ?";
     public static String ELIMINAR_USUARIO       = "DELETE FROM Usuarios WHERE id = ?";

@@ -151,7 +151,6 @@ public class ProductosEmpacados {
      * @param productoEmpacado Producto empacado.
      * @throws DAOException error
      */
-    
     public void actualiza(ProductoEmpacado productoEmpacado) throws DAOException {
         PreparedStatement stmt;
 
@@ -172,7 +171,7 @@ public class ProductosEmpacados {
             stmt.close();
 
         } catch (SQLException ex) {
-            System.out.println(ex.getErrorCode());
+            //System.out.println(ex.getErrorCode());
             throw new DAOException("No se pudo actualizar el producto empacado debido a un error, intentelo mas tarde...");
         }
     }
@@ -186,7 +185,7 @@ public class ProductosEmpacados {
         PreparedStatement stmt;
 
         try {
-            stmt = this.conexionBD.getConexionMySQL().prepareStatement(EliminacionesAbarrotes.ELIMINAR_PRODUCTO_EMPACADO);
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(EliminacionesAbarrotes.ELIMINAR_PRODUCTO_GRANEL);
 
             // WHERE clave_producto = ...
             stmt.setString(1, productoEmpacado.getClave());

@@ -42,7 +42,7 @@ public class PersistenciaListas implements IPersistencia {
         this.catalogoProductos = new Productos(conexion);
         this.registroVentasGranel = new MovimientosGranel();
         this.registroComprasGranel = new MovimientosGranel();
-        this.inventarioProductosGranel = new ProductosGranel();
+        this.inventarioProductosGranel = new ProductosGranel(conexion);
         this.registroVentasEmpacados = new MovimientosEmpacados();
         this.registroComprasEmpacados = new MovimientosEmpacados();
         this.inventarioProductosEmpacados = new ProductosEmpacados();
@@ -560,11 +560,14 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void actualizarInventarioVentasEmpacado() throws PersistenciaException {
+        
         /*
         Iterator<MovimientoEmpacado> ventasE = registroVentasEmpacados.lista().iterator();
         if ((!registroVentasEmpacados.lista().isEmpty())) {
             while (ventasE.hasNext()) {
                 MovimientoEmpacado movimientoEmpacado = ventasE.next();
+                
+                
                 if (!movimientoEmpacado.getProcesado()) {
                     if (inventarioProductosEmpacados.lista().contains(movimientoEmpacado.getProductoEmpacado())) {
                         ProductoEmpacado productoE = (ProductoEmpacado) inventarioProductosEmpacados.lista().get(inventarioProductosEmpacados.lista().indexOf(movimientoEmpacado.getProductoEmpacado()));
@@ -589,6 +592,7 @@ public class PersistenciaListas implements IPersistencia {
             throw new PersistenciaException("No se pudo actualizar el inventario de ventas empacados");
         }
         */
+        
     }
 
     /**
@@ -602,6 +606,7 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void actualizarInventarioComprasGranel() throws PersistenciaException {
+        /*
         Iterator<MovimientoGranel> compra = registroComprasGranel.lista().iterator();
         if ((!registroComprasGranel.lista().isEmpty())) {
             while (compra.hasNext()) {
@@ -626,6 +631,7 @@ public class PersistenciaListas implements IPersistencia {
         } else {
             throw new PersistenciaException("No se puede actualizar el inventario de compras de productos empacados.");
         }
+        */
     }
 
     /**
@@ -657,7 +663,7 @@ public class PersistenciaListas implements IPersistencia {
                             }
                         }
                     } else {
-                        inventarioProductosGranel.agrega(movimientoGranel.getProductoGranel());
+                        //inventarioProductosGranel.agrega(movimientoGranel.getProductoGranel());
                     }
                 }
             }
