@@ -41,7 +41,7 @@ El archivo **"launch.bat"** busca si se encuentra un archivo JAR ejecutable de l
   - [x] Productos
   - [x] Usuarios
   - [x] Productos Empacados
-  - [ ] Productos a Granel
+  - [x] Productos a Granel
   - [ ] Movimientos Productos Empacados
   - [ ] Movimientos Productos a Granel
 - [ ] Hacer las **PRUEBAS UNITARIAS** de la nueva libreria modificada **AbarrotesDAO** [Damian, necesita **AbarrotesDAO** actualizado para realizarlo, maximo para el 10 de Noviembre].
