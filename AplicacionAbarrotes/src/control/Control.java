@@ -1240,43 +1240,38 @@ public class Control {
         }
     }
 
-    //************************Tablas***********************
-    /**
-     * Regresa un objeto Tabla con todos los productos.
-     *
-     * @param frame Ventana sobre la que se despliega.
-     * @return Objeto Tabla con todas los productos.
-     */
-    public Tabla getTablaProductos(JFrame frame) {
-        List<Producto> listaproductos = null;
-        try {
-            listaproductos = persistencia.consultarProductos();
-
-        } catch (PersistenciaException e) {
-            return new Tabla("", conversiones.productosTableModel(listaproductos));
-        }
-
-        return new Tabla("Lista de Productos en General", conversiones.productosTableModel(listaproductos));
-    }
-
     /**
      * Regresa un objeto Tabla con todos los productos.
      *
      * @param frame Ventana sobre la que se despliega.
      * @return Objeto Tabla con todas los productos.
      */ 
-    public Tabla getTablaProductos2(JFrame frame) {
+    public Tabla getTablaProductos(JFrame frame) {
         List<Producto> listaproductos = null;
         try {
             listaproductos = persistencia.consultarProductos();
+            
+            /*
+            int i=1;
+            for (Producto producto: listaproductos) {
+                System.out.println(i + "# " + producto);
+                i++;
+            }
+            */
+                
+            
         } catch (PersistenciaException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
-        return new Tabla("Lista de Productos en General", conversiones.productosTableModel(listaproductos));
+        //String titulo = String.format("Lista de Productos [%d / %d]", listaproductos.size(), persistencia.consultar);
+                
+        
+        return new Tabla("Lista de Productos", conversiones.productosTableModel(listaproductos));
     }
 
+    
     /**
      * Regresa un objeto Tabla con todos los productos granel.
      *
@@ -1288,30 +1283,16 @@ public class Control {
         try {
             listaproductosGranel = persistencia.consultarProductosGranel();
         } catch (PersistenciaException e) {
-            return new Tabla("", conversiones.productosTableModel(listaproductosGranel));
-
-        }
-
-        return new Tabla("Lista de productos Productos Granel", conversiones.productosTableModel(listaproductosGranel));
-    }
-
-    /**
-     * Regresa un objeto Tabla con todos los productos granel.
-     *
-     * @param frame Ventana sobre la que se despliega.
-     * @return Objeto Tabla con todas los productos.
-     */
-    public Tabla getTablaProductosGranel2(JFrame frame) {
-        List<Producto> listaproductosGranel = null;
-        try {
-            listaproductosGranel = persistencia.consultarProductosGranel();
-        } catch (PersistenciaException e) {
             JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
             return null;
 
         }
 
-        return new Tabla("Lista de productos Productos Granel", conversiones.productosTableModel(listaproductosGranel));
+        return new Tabla(
+                String.format("Lista de Productos Granel [ Resultados: %d ]", listaproductosGranel.size()),
+                conversiones.productosTableModel(listaproductosGranel)
+        );
+        //return new Tabla("Lista de productos Productos Granel", conversiones.productosTableModel(listaproductosGranel));
     }
 
     /**
@@ -1329,26 +1310,10 @@ public class Control {
 
         }
 
-        return new Tabla("Lista de Productos Empacados", conversiones.productosTableModel(listaproductosEmpacados));
-    }
-
-    /** 
-     * Regresa un objeto Tabla con todos los productos empacados.
-     *
-     * @param frame Ventana sobre la que se despliega.
-     * @return Objeto Tabla con todas los productos.
-     */
-    public Tabla getTablaProductosEmpacados2(JFrame frame) {
-        List<Producto> listaproductosEmpacados = null;
-        try {
-            listaproductosEmpacados = persistencia.consultarProductosEmpacados();
-        } catch (PersistenciaException e) {
-            JOptionPane.showMessageDialog(frame, e.getMessage(), "Error!!.", JOptionPane.ERROR_MESSAGE);
-            return null;
-
-        }
-
-        return new Tabla("Lista de Productos Empacados", conversiones.productosTableModel(listaproductosEmpacados));
+        return new Tabla(
+                String.format("Lista de Productos Granel [ Resultados: %d ]", listaproductosEmpacados.size()),
+                conversiones.productosTableModel(listaproductosEmpacados)
+        );
     }
 
     /**

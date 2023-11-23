@@ -27,7 +27,6 @@ public class Usuarios {
     private ConexionAbarrotesBD conexionBD;
     // donde se alojaran los productos que se vayan guardando con la PAGINACION
     private List<Usuario> usuarios;
-    
     private int desplazamiento = 0;
     private int limiteListaUsuarios = 20;
     

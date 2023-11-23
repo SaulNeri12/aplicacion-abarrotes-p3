@@ -21,8 +21,6 @@ public class MovimientosEmpacados {
         this.movimientosEmpacados = new ArrayList();
     }
     
-   
-
     /** 
      * Metodo que regresa la lista de movimiento de producto granel que se da por el parametro, 
      * siempre y cuando su clave sea la misma, regresara null si no existe.
@@ -33,7 +31,7 @@ public class MovimientosEmpacados {
      */
     public MovimientoEmpacado obten(MovimientoEmpacado movimientoEmpacado) throws PersistenciaException{
         if (movimientosEmpacados.contains(movimientoEmpacado)){
-         return movimientoEmpacado;   
+            return movimientoEmpacado;   
         }else{
             return null;
         }
@@ -46,7 +44,6 @@ public class MovimientosEmpacados {
      */
     public void agrega(MovimientoEmpacado movimientoEmpacado) {
         movimientosEmpacados.add(movimientoEmpacado);
-
     }
     
     /**

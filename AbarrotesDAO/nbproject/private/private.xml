@@ -3,10 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/dao/MovimientosGranel.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/plantillas/EliminacionesAbarrotes.java</file>
             <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/plantillas/ConsultasAbarrotes.java</file>
-            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/pruebas/PruebaProductos.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/dao/PersistenciaListas.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/dao/ProductosGranel.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/plantillas/InsercionesAbarrotes.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/dao/MovimientosEmpacados.java</file>
             <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/plantillas/ModificacionesAbarrotes.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/pruebas/PruebaProductos.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/dao/ProductosEmpacados.java</file>
             <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/dao/Productos.java</file>
+            <file>file:/C:/Users/Saul%20Neri/Desktop/aplicacion-abarrotes-p3/AbarrotesDAO/src/plantillas/ErrorMySQL.java</file>
         </group>
     </open-files>
 </project-private>

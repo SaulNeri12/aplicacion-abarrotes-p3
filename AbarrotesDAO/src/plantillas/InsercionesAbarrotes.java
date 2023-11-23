@@ -8,5 +8,6 @@ package plantillas;
  */
 public class InsercionesAbarrotes {
     public static String AGREGAR_PRODUCTO   = "INSERT INTO Productos (clave_producto, nombre, tipo, unidad) VALUES (?, ?, ?, ?)";
-    public static String REGISTRAR_USUARIO  = "INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES (?, ?, ?, ?, ?, ?)";  
+    public static String AGREGAR_PRODUCTO_EMPACADO = "INSERT INTO ProductosEmpacados (clave_producto, cantidad) VALUES (?, ?)";
+    public static String REGISTRAR_USUARIO  = "INSERT INTO Usuarios (id, nombre, telefono, email, contrasena, rol) VALUES (?, ?, ?, ?, ?, ?)";
 }

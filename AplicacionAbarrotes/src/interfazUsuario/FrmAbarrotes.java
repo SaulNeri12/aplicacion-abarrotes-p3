@@ -44,8 +44,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
             
             System.exit(0);
         }
-        
-        
+       
     }
     
     /** 
@@ -86,7 +85,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
         
         // Hace visible la tabla dentro del panel con barras de
         // deslizamiento
-        jScrollPane1.setViewportView(jtabla);
+        panelScroll.setViewportView(jtabla);
     
     }
 
@@ -102,7 +101,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
         tituloTabla = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        panelScroll = new javax.swing.JScrollPane();
         menuBar = new javax.swing.JMenuBar();
         menuCatalogo = new javax.swing.JMenu();
         menuCatalogoProductos = new javax.swing.JMenu();
@@ -166,7 +165,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
 
         tituloTabla.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        jScrollPane1.setBorder(new javax.swing.border.MatteBorder(null));
+        panelScroll.setBorder(new javax.swing.border.MatteBorder(null));
 
         menuCatalogo.setMnemonic('f');
         menuCatalogo.setText("Catalogos");
@@ -534,7 +533,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                    .addComponent(panelScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
                     .addComponent(tituloTabla))
                 .addContainerGap())
         );
@@ -544,7 +543,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addComponent(tituloTabla)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addComponent(panelScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                 .addGap(19, 19, 19))
         );
 
@@ -670,7 +669,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
      * @param evt Evento.
      */
     private void opcionMenuConsultaProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionMenuConsultaProductosActionPerformed
-        Tabla tablaProductos = control.getTablaProductos2(this);
+        Tabla tablaProductos = control.getTablaProductos(this);
         if (tablaProductos != null) {
             despliegaTabla(tablaProductos);
         }
@@ -684,7 +683,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
      */
     private void opcionMenuConsultaProductosGranelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionMenuConsultaProductosGranelActionPerformed
         Tabla tablaProductos;
-        tablaProductos = control.getTablaProductosGranel2(this);
+        tablaProductos = control.getTablaProductosGranel(this);
         if (tablaProductos!=null) {
             despliegaTabla(tablaProductos);
         }
@@ -923,7 +922,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
      * @param evt Evento.
      */
     private void opcionMenuConsultaProductosEmpacadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionMenuConsultaProductosEmpacadosActionPerformed
-        Tabla tablaProductos = control.getTablaProductosEmpacados2(this);
+        Tabla tablaProductos = control.getTablaProductosEmpacados(this);
         if (tablaProductos != null) {
             despliegaTabla(tablaProductos);
         }
@@ -1069,7 +1068,6 @@ public class FrmAbarrotes extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator Separador1;
     private javax.swing.JMenuItem consultarProductoIndividual;
     private javax.swing.JEditorPane jEditorPane1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenu menuAyuda;
     private javax.swing.JMenuBar menuBar;
@@ -1123,6 +1121,7 @@ public class FrmAbarrotes extends javax.swing.JFrame {
     private javax.swing.JMenuItem opcionMenuEliminarVentaEmpacados;
     private javax.swing.JMenuItem opcionMenuEliminarVentaGranel;
     private javax.swing.JMenuItem opcionMenuSalir;
+    private javax.swing.JScrollPane panelScroll;
     private javax.swing.JMenuItem pcionMenuActualizarInventarioEmpacadosVentas;
     private javax.swing.JLabel tituloTabla;
     // End of variables declaration//GEN-END:variables
