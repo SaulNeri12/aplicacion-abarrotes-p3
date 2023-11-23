@@ -56,6 +56,7 @@ public class PersistenciaListas implements IPersistencia {
      * @return Objeto Usuario si lo encuentra, caso contrario devuelve null
      * @throws PersistenciaException Si ocurrio un error interno
      */
+    @Override
     public Usuario obten(Usuario usuario) throws PersistenciaException {
         Usuario encontrado = null;
         try {
@@ -78,6 +79,7 @@ public class PersistenciaListas implements IPersistencia {
      * @throws PersistenciaException Si ocurre un error interno al registrar
      * al usuario
      */
+    @Override
     public void agregar(Usuario usuario) throws PersistenciaException {
         try {
             usuarios.agregar(usuario);
@@ -92,6 +94,7 @@ public class PersistenciaListas implements IPersistencia {
      * @throws PersistenciaException Si el usuario ya esta registrado u ocurre un error
      * interno
      */
+    @Override
     public void actualizar(Usuario usuario) throws PersistenciaException {
         Usuario encontrado = null;
         
@@ -557,6 +560,7 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void actualizarInventarioVentasEmpacado() throws PersistenciaException {
+        /*
         Iterator<MovimientoEmpacado> ventasE = registroVentasEmpacados.lista().iterator();
         if ((!registroVentasEmpacados.lista().isEmpty())) {
             while (ventasE.hasNext()) {
@@ -584,6 +588,7 @@ public class PersistenciaListas implements IPersistencia {
         } else {
             throw new PersistenciaException("No se pudo actualizar el inventario de ventas empacados");
         }
+        */
     }
 
     /**
@@ -671,6 +676,7 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void actualizarInventarioComprasEmpacado() throws PersistenciaException {
+        /*
         Iterator<MovimientoEmpacado> comprasE = registroComprasEmpacados.lista().iterator();
         if ((!registroComprasEmpacados.lista().isEmpty())) {
             while (comprasE.hasNext()) {
@@ -695,6 +701,21 @@ public class PersistenciaListas implements IPersistencia {
         } else {
             throw new PersistenciaException("No se pudo actualizar el inventario de compras empacado");
         }
+        */
+    }
+    
+    /**
+     * Devuelve el numero total de productos registrados en el sistema
+     * @return Numero total de productos
+     * @throws PersistenciaException Si no se pudo obtener el numero total de productos
+     */
+    public int consultarNumeroTotalProductos() throws PersistenciaException {
+        try {
+            int resultados = catalogoProductos.numeroTotalProductos();
+            return resultados;
+        } catch (DAOException ex) {
+            throw new PersistenciaException("No se pudo obetener el numero total de productos");
+        }
     }
     
     /**
@@ -706,10 +727,17 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public List<Producto> consultarProductos() throws PersistenciaException {
+        try {
+            catalogoProductos.consultarProductos();
+        } catch (DAOException ex) {
+            throw new PersistenciaException("Ocurrio un error en la busqueda de productos, intente mas tarde...");
+            //throw new PersistenciaException(ex.getMessage());
+        }
+        
         if (!catalogoProductos.lista().isEmpty()) {
             return catalogoProductos.lista();
         } else {
-            throw new PersistenciaException("La lista de productos no existe");
+            throw new PersistenciaException("Lista de productos vacia");
         }
     }
 

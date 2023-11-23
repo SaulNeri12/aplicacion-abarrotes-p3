@@ -11,13 +11,13 @@ CREATE TABLE IF NOT EXISTS Productos (
 
 CREATE TABLE IF NOT EXISTS ProductosGranel (
 	clave_producto VARCHAR(10) PRIMARY KEY,
-	cantidad FLOAT NOT NULL,
+	cantidad FLOAT UNSIGNED NOT NULL,
     FOREIGN KEY (clave_producto) REFERENCES Productos(clave_producto)
 );
 
 CREATE TABLE IF NOT EXISTS ProductosEmpacados (
 	clave_producto VARCHAR(10) PRIMARY KEY,
-	cantidad BIGINT NOT NULL,
+	cantidad INT UNSIGNED NOT NULL,
     FOREIGN KEY (clave_producto) REFERENCES Productos(clave_producto)
 );
 

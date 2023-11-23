@@ -10,6 +10,10 @@ import java.util.List;
 import objetosNegocio.Producto;
 import objetosNegocio.ProductoEmpacado;
 import plantillas.ConsultasAbarrotes;
+import plantillas.EliminacionesAbarrotes;
+import plantillas.ErrorMySQL;
+import plantillas.InsercionesAbarrotes;
+import plantillas.ModificacionesAbarrotes;
 
 /**
  *
@@ -18,6 +22,12 @@ import plantillas.ConsultasAbarrotes;
 public class ProductosEmpacados {
     private ConexionAbarrotesBD conexionBD;
     private List<ProductoEmpacado> productosEmpacados;
+    
+    private Productos productos;
+    
+    // variables necesarias para paginacion de consulta de Productos
+    private int desplazamiento = 0;
+    private int limiteListaProductos = 20;
     
     /** 
      * Constructor que crea como instanica una lista de productos empacados.
@@ -35,6 +45,7 @@ public class ProductosEmpacados {
     public ProductosEmpacados(ConexionAbarrotesBD conexion) {
         this.conexionBD = conexion;
         this.productosEmpacados = new ArrayList<>();
+        this.productos = new Productos(this.conexionBD);
     }
     
     /**
@@ -43,49 +54,19 @@ public class ProductosEmpacados {
      * @param productoEmpacado Producto empacado.
      * @return Producto empacado.
      */
-    public Producto obten(ProductoEmpacado productoEmpacado) throws DAOException {
+    public ProductoEmpacado obten(ProductoEmpacado productoEmpacado) throws DAOException {
         Producto producto = null;
         ProductoEmpacado empacado = null;
+    
+        producto = productos.obten(productoEmpacado);
+    
+        if (producto.getTipo() != 'E') {
+            throw new DAOException("El producto dado no es un producto empacado");
+        }
         
         try {
             // busca la informacion del producto en la tabla Productos
             PreparedStatement stmt = this.conexionBD.getConexionMySQL().prepareStatement(
-                    ConsultasAbarrotes.PRODUCTOS_POR_CLAVE, 
-                    ResultSet.TYPE_SCROLL_SENSITIVE, 
-                    ResultSet.CONCUR_UPDATABLE
-            );
-            
-            stmt.setString(1, productoEmpacado.getClave());
-            
-            ResultSet rs = stmt.executeQuery();
-            
-            // si no existe el producto...
-            if (!rs.next()) {
-                
-                rs.close();
-                stmt.close();
-                
-                return null;
-            }
-            
-            // indica que se requiere el primero encontrado
-            rs.first();
-            
-            // obtiene los datos del primer producto encontrado encontrado
-            String claveProducto = rs.getString("clave_producto");
-            String nombre = rs.getString("nombre");
-            String tipo = rs.getString("tipo");
-            String unidad = rs.getString("unidad");
-
-            producto = new Producto(
-                    claveProducto,
-                    nombre, 
-                    tipo.toCharArray()[0], 
-                    unidad
-            );
-            
-            // busca la informacion del producto empacado en la tabla ProductosEmpacados
-            stmt = this.conexionBD.getConexionMySQL().prepareStatement(
                     ConsultasAbarrotes.PRODUCTOS_EMPACADOS_POR_CLAVE, 
                     ResultSet.TYPE_SCROLL_SENSITIVE, 
                     ResultSet.CONCUR_UPDATABLE
@@ -93,7 +74,7 @@ public class ProductosEmpacados {
             
             stmt.setString(1, productoEmpacado.getClave());
             
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             
             // si no existe el producto empacado...
             if (!rs.next()) {
@@ -121,52 +102,178 @@ public class ProductosEmpacados {
             return empacado;
             
         } catch (SQLException ex) {
-            throw new DAOException(ex.getMessage());
+            //System.out.println(ex.getErrorCode());
+            //System.out.println(ex.getMessage());
+            throw new DAOException("No se pudo obtener el producto empacado debido a un error interno, intentelo mas tarde...");
         }
     }
     
     /**
-     * Metodo que sin restringir clave repetida, agrega a la lista un producto empacado dado.
-     * 
-     * @param productoEmpacado Producto empacado.
+     * Agrega el producto empacado al inventario con una cantidad especificada en
+     * el mismo producto.
+     * @param productoEmpacado Producto empacado a agregar (inventariar)
      */
-    public void agrega(ProductoEmpacado productoEmpacado) {
-        productosEmpacados.add(productoEmpacado);
+    public void agrega(ProductoEmpacado productoEmpacado) throws DAOException {
+        PreparedStatement stmt;
+        
+        Producto producto = productos.obten(productoEmpacado);
+        
+        //System.out.println("AG ### " + producto.getTipo());
+       
+        if (producto.getTipo() != 'E') {
+            throw new DAOException("El producto dado no es un producto empacado");
+        }
+        
+        try {
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(InsercionesAbarrotes.AGREGAR_PRODUCTO_EMPACADO);
 
+            stmt.setString(1, productoEmpacado.getClave());
+            stmt.setInt(2, productoEmpacado.getCantidad());
+
+            int numAnadidos = stmt.executeUpdate();
+            
+            //System.out.println("# anadidos: "+numAnadidos);
+            
+            stmt.close();
+
+        } catch (SQLException ex) {
+            //System.out.println(ex.getErrorCode());
+            if (ex.getErrorCode() == ErrorMySQL.DUPLICATE) {
+                throw new DAOException("El producto empacado ya se encuentra registrado");
+            }
+            throw new DAOException("No se pudo agregar el producto empacado debido a un error interno, intentelo mas tarde...");
+        }
     }
     
     /**
-     * Metodo que reemplaza un producto granel de la lista (si existe), por el producto empacado dado en el parametro,
+     * Reemplaza un producto granel de la lista si este existe, por el producto empacado dado en el parametro,
      * deben tener la misma clave.
-     * 
      * @param productoEmpacado Producto empacado.
      * @throws DAOException error
      */
     
     public void actualiza(ProductoEmpacado productoEmpacado) throws DAOException {
-        boolean check = false;
-        for (int i = 0; i < productosEmpacados.size(); i++) {
-            if (productoEmpacado.equals(productosEmpacados.get(i))) {
-                productosEmpacados.set(i, productoEmpacado);
-                check = true;
-                break;
+        PreparedStatement stmt;
+
+        try {
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(ModificacionesAbarrotes.ACTUALIZAR_PRODUCTO_EMPACADO);
+
+            stmt.setInt(1, productoEmpacado.getCantidad());
+            // WHERE clave_producto = ...
+            stmt.setString(2, productoEmpacado.getClave());
+
+            int numModificados = stmt.executeUpdate();
+
+            if (numModificados <= 0) {
+                throw new DAOException("No se pudo actualizar el producto empacado ya que no se encuentra registrado");
             }
-            if (check == false) {
-                throw new DAOException("**El producto a actualizar no existe**");
-            }
+
+            //System.out.println(numModificados + "shesh");
+            stmt.close();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getErrorCode());
+            throw new DAOException("No se pudo actualizar el producto empacado debido a un error, intentelo mas tarde...");
         }
     }
     
     /**
-     * Metodo que elimina un producto granel de la lista (si existe), por el producto graneñ dado en el parametro,
-     * deben tener la misma clave.
-     * 
+     * Elimina el producto empacado dado si este existe en el inventario.
      * @param productoEmpacado Producto empacado.
-     * @throws DAOException error
+     * @throws DAOException Si ocurre un error en la eliminacion del producto empacado
      */
     public void elimina(ProductoEmpacado productoEmpacado) throws DAOException {
-        if (!productosEmpacados.remove(productoEmpacado)) {
-            throw new DAOException("El producto no se pudo eliminar");
+        PreparedStatement stmt;
+
+        try {
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(EliminacionesAbarrotes.ELIMINAR_PRODUCTO_EMPACADO);
+
+            // WHERE clave_producto = ...
+            stmt.setString(1, productoEmpacado.getClave());
+
+            int numEliminados = stmt.executeUpdate();
+
+            if (numEliminados <= 0) {
+                throw new DAOException("El producto empacado no se encuentra inventariado");
+            }
+
+            stmt.close();
+
+        } catch (SQLException ex) {
+            //System.out.println("#" + ex.getClass());
+            throw new DAOException("No se pudo eliminar el producto empacado debido a un error, intentelo mas tarde...");
+        }
+    }
+    
+    /**
+     * Carga un determinado numero de productos empacados de la base de datos para ser
+     * ingresados a la lista de acceso rapido.
+     * @throws DAOException Si ocurre un error de busqueda
+     */
+    public void consultarProductosEmpacados() throws DAOException {
+        Producto productoEncontrado = null;
+
+        try {
+
+            PreparedStatement stmt = this.conexionBD.getConexionMySQL().prepareStatement(
+                    ConsultasAbarrotes.PRODUCTOS_EMPACADOS_TODOS,
+                    ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE
+            );
+
+            stmt.setInt(1, this.limiteListaProductos);
+            stmt.setInt(2, this.desplazamiento);
+
+            ResultSet rs = stmt.executeQuery();
+
+            rs.first();
+            
+            // obtiene el primer producto encontrado...
+            String claveProducto = rs.getString("clave_producto");
+            int cantidad = rs.getInt("cantidad");
+
+            productoEncontrado = productos.obten(new Producto(claveProducto));
+            
+            if (productoEncontrado == null) {
+                rs.close();
+                stmt.close();
+                throw new DAOException("Algo salio mal en la consulta, intentelo mas tarde...");
+            }
+            
+            ProductoEmpacado productoEmpacado = new ProductoEmpacado(
+                productoEncontrado,
+                cantidad   
+            );
+
+            productosEmpacados.add(productoEmpacado);
+            
+            // por cada producto en la busqueda...
+            while (rs.next()) {
+                // se obtienen los productos siguientes al primero...          
+                productoEncontrado = productos.obten(new Producto(claveProducto));
+
+                productoEmpacado = new ProductoEmpacado(
+                        productoEncontrado,
+                        cantidad
+                );
+                
+                if (productoEncontrado == null) {
+                    rs.close();
+                    stmt.close();
+                    throw new DAOException("Algo salio mal en la consulta, intentelo mas tarde...");
+                }
+                
+                productosEmpacados.add(productoEmpacado);
+            }
+
+            rs.close();
+            stmt.close();
+
+            this.desplazamiento += this.limiteListaProductos;
+
+        } catch (SQLException ex) {
+            //System.out.println(ex.getErrorCode());
+            throw new DAOException(ex.getMessage());
         }
     }
     

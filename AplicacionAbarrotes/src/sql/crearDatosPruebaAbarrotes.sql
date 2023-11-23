@@ -10,6 +10,83 @@ VALUES ('AMC0102', 'Sal', 'G', 'Kg');
 INSERT INTO Productos (clave_producto, nombre, tipo, unidad) 
 VALUES ('AMC0103', 'Azucar', 'G', 'Kg');
 
+--[PRODUCTOS COMUNES]
+INSERT INTO Productos (clave_producto, nombre, tipo, unidad) VALUES
+('ABC1234', 'Arroz', 'G', 'Kg'),
+('DEF5678', 'Detergente', 'E', 'ml'),
+('GHI9012', 'Galletas', 'G', 'gr'),
+('JKL3456', 'Jabón', 'E', 'lt'),
+('MNO7890', 'Manzanas', 'G', 'Kg'),
+('STU5678', 'Sopa', 'G', 'ml'),
+('VWX9012', 'Vino', 'E', 'lt'),
+('YZA3456', 'Yogur', 'G', 'ml'),
+('BCD7890', 'Bananas', 'G', 'Kg'),
+('HIJ5678', 'Harina', 'G', 'gr'),
+('KLM9012', 'Ketchup', 'E', 'ml'),
+('NOP3456', 'Naranjas', 'G', 'Kg'),
+('QRS7890', 'Queso', 'E', 'gr'),
+('TUV1234', 'Tomates', 'G', 'Kg'),
+('WXY5678', 'Whisky', 'E', 'ml'),
+('ZAB9012', 'Zanahorias', 'G', 'Kg'),
+('CDE3456', 'Café', 'E', 'gr'),
+('FGH7890', 'Fresas', 'G', 'Kg'),
+('IJK1234', 'Insecticida', 'E', 'ml'),
+('LMN5678', 'Leche', 'G', 'lt'),
+('OPQ9012', 'Pan', 'E', 'gr'),
+('UVW7890', 'Uvas', 'G', 'Kg'),
+('XYZ1234', 'Xampú', 'E', 'ml'),
+('ABC5678', 'Acelgas', 'G', 'Kg'),
+('DEF9012', 'Desodorante', 'E', 'ml');
+
+-- [VINOS Y LICORES]
+INSERT INTO Productos (clave_producto, nombre, tipo, unidad) VALUES
+('ALC001', 'Vino Tinto', 'G', 'lt'),
+('ALC002', 'Cerveza Artesanal', 'G', 'ml'),
+('ALC003', 'Whisky Escocés', 'G', 'ml'),
+('ALC004', 'Tequila Reposado', 'G', 'ml'),
+('ALC005', 'Gin Premium', 'G', 'ml'),
+('ALC006', 'Vodka Ruso', 'G', 'ml'),
+('ALC007', 'Champagne Brut', 'G', 'lt'),
+('ALC008', 'Ron Añejo', 'G', 'ml'),
+('ALC009', 'Licor de Café', 'G', 'ml'),
+('ALC010', 'Sidra Española', 'G', 'lt'),
+('ALC011', 'Vermut Italiano', 'G', 'lt'),
+('ALC012', 'Absenta Suiza', 'G', 'ml'),
+('ALC013', 'Cognac Francés', 'G', 'ml'),
+('ALC014', 'Sake Japonés', 'G', 'ml'),
+('ALC015', 'Brandy Español', 'G', 'ml'),
+('ALC016', 'Cava Catalán', 'G', 'lt'),
+('ALC017', 'Pisco Peruano', 'G', 'ml'),
+('ALC018', 'Licores Irlandeses', 'G', 'ml'),
+('ALC019', 'Aguardiente Colombiano', 'G', 'ml'),
+('ALC020', 'Amaretto Italiano', 'G', 'ml');
+
+-- [SABRITAS Y MAS]
+INSERT INTO Productos (clave_producto, nombre, tipo, unidad) VALUES
+('SNK0001', 'Papas Clásicas', 'E', 'pz'),
+('SNK0002', 'Doritos Nacho', 'E', 'pz'),
+('SNK0003', 'Lays Original', 'E', 'pz'),
+('SNK0004', 'Pringles Sour Cream', 'E', 'pz'),
+('SNK0005', 'Ruffles Queso', 'E', 'pz'),
+('SNK0006', 'Cheetos Crunchy', 'E', 'pz'),
+('SNK0007', 'Tostitos Salsa Verde', 'E', 'pz'),
+('SNK0008', 'Fritos Chili Cheese', 'E', 'pz'),
+('SNK0009', 'Popcorners Kettle', 'E', 'pz'),
+('SNK0010', 'Sunchips Harvest Cheddar', 'E', 'pz'),
+('SNK0011', 'Kettle Brand Sea Salt', 'E', 'pz'),
+('SNK0012', 'Rold Gold Pretzels', 'E', 'pz'),
+('SNK0013', 'Doritos Cool Ranch', 'E', 'pz'),
+('SNK0014', 'Lays BBQ', 'E', 'pz'),
+('SNK0015', 'Pringles Original', 'E', 'pz'),
+('SNK0016', 'Cheetos Puffs', 'E', 'pz'),
+('SNK0017', 'Takis Fuego', 'E', 'pz'),
+('SNK0018', 'SunChips French Onion', 'E', 'pz'),
+('SNK0019', 'Popcorn Indiana Aged White Cheddar', 'E', 'pz'),
+('SNK0020', 'Doritos Flamin'' Hot', 'E', 'pz');
+
+
+
+
 -- insercion de usuarios
 INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Ana Gonzalez', '79121003', 'ana.gonzalez@gmail.com', 'a1b2c3d4', 'repartidor');
 INSERT INTO Usuarios (nombre, telefono, email, contrasena, rol) VALUES ('Carlos Rodriguez', '612345678', 'carlos.rodriguez@gmail.com', 'e5f6g7h8', 'administrador');
