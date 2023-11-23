@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import objetosServicio.Fecha;
 import plantillas.ConsultasAbarrotes;
 import plantillas.EliminacionesAbarrotes;
 import plantillas.InsercionesAbarrotes;
@@ -71,7 +72,7 @@ public class Productos {
             stmt.setString(1, producto.getClave());
 
             ResultSet rs = stmt.executeQuery();
-
+            
             //System.out.println();
             // si no existe el producto...
             if (!rs.next()) {

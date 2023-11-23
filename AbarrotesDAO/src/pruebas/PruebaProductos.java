@@ -8,6 +8,7 @@ import conexion.ConexionAbarrotesBD;
 import conexion.ConexionConfig;
 import dao.Productos;
 import dao.ProductosEmpacados;
+import dao.ProductosGranel;
 import dao.Usuarios;
 import excepciones.DAOException;
 import excepciones.ErrorConexionException;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objetosNegocio.Producto;
 import objetosNegocio.ProductoEmpacado;
+import objetosNegocio.ProductoGranel;
 import objetosNegocio.Usuario;
 import plantillas.ValidacionesAbarrotes;
 
@@ -35,6 +37,7 @@ public class PruebaProductos {
             Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        /*
         ProductosEmpacados empacados = new ProductosEmpacados(conn);
         
         
@@ -73,14 +76,14 @@ public class PruebaProductos {
             else {
                 System.out.println(pe);
             }
-            */
+            
             
         } catch (DAOException ex) {
             Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
-        /*
+        
         pe.setCantidad(20);
         
         try {
@@ -100,6 +103,51 @@ public class PruebaProductos {
         }
         */
         
+        ProductosGranel productosGranel = new ProductosGranel(conn);
+        
+        
+        Productos productos = new Productos(conn);
+        
+        Producto p = null;
+        
+        try {
+            p = productos.obten(new Producto("AMC0101"));
+            //p = productos.obten(new Producto("AMC0101"));
+            
+            System.out.println("#### " + p);
+            
+            if (p == null) {
+                System.out.println("No existe el producto: " + p);
+            }
+            
+            //ProductoEmpacdo prEmp = new ProductoEmpacado();
+            
+            productosGranel.agrega(new ProductoGranel(p, 10));
+
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                    
+        ProductoGranel pe = null;
+        try {
+            pe = (ProductoGranel) productosGranel.obten(new ProductoGranel(new Producto("AMC0101")));
+            //pe = empacados.obten(new ProductoEmpacado(new Producto("AMC0101")));
+            
+            
+            if (pe == null) {
+                System.out.println("El producto empacado no esta registrado");
+            } 
+            /*
+            else {
+                System.out.println(pe);
+            }
+            */
+            
+        } catch (DAOException ex) {
+            Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /*
         try {
             pe = empacados.obten(pe);
             System.out.println("ENCONTRADO: " + pe);
@@ -120,6 +168,7 @@ public class PruebaProductos {
         } catch (DAOException ex) {
             Logger.getLogger(PruebaProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
+        */
         
         
         
