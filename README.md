@@ -40,7 +40,7 @@ El archivo **"launch.bat"** busca si se encuentra un archivo JAR ejecutable de l
 - [ ] Modificar la libreria **AbarrotesDAO** para que trabaje sobre la base de datos *[Saul, para el 8 de Noviembre, maximo el 10 de Noviembre]*
   - [x] Productos
   - [x] Usuarios
-  - [ ] Productos Empacados
+  - [x] Productos Empacados
   - [ ] Productos a Granel
   - [ ] Movimientos Productos Empacados
   - [ ] Movimientos Productos a Granel
