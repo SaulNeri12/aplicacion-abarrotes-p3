@@ -16,8 +16,9 @@ import plantillas.InsercionesAbarrotes;
 import plantillas.ModificacionesAbarrotes;
 
 /**
- *
- * @author Equipo 07
+ * Se encarga de obtener, agregar, actualizar y eliminar productos empacados del
+ * sistema de abarrotes.
+ * @author Saul Neri
  */
 public class ProductosEmpacados {
     private ConexionAbarrotesBD conexionBD;
@@ -27,7 +28,7 @@ public class ProductosEmpacados {
     
     // variables necesarias para paginacion de consulta de Productos
     private int desplazamiento = 0;
-    private int limiteListaProductos = 20;
+    private int limiteListaProductos = 30;
     
     /** 
      * Constructor que crea como instanica una lista de productos empacados.
@@ -246,6 +247,8 @@ public class ProductosEmpacados {
 
             productosEmpacados.add(productoEmpacado);
             
+            this.desplazamiento++;
+            
             // por cada producto en la busqueda...
             while (rs.next()) {
                 // se obtienen los productos siguientes al primero...          
@@ -263,12 +266,12 @@ public class ProductosEmpacados {
                 }
                 
                 productosEmpacados.add(productoEmpacado);
+                
+                this.desplazamiento++;
             }
 
             rs.close();
             stmt.close();
-
-            this.desplazamiento += this.limiteListaProductos;
 
         } catch (SQLException ex) {
             //System.out.println(ex.getErrorCode());

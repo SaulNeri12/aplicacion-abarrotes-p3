@@ -5,13 +5,14 @@ import objetosServicio.Fecha;
 
 /**
  * Clase sobre los movimientos de productos en general.
- * @author Enrique Rodriguez
+ * @author Jesus Castro
  */
 public class Movimiento {
 
     private String cveMovimiento;
     private Fecha fecha;
     private boolean procesado;
+    private Usuario usuario;
     
     /**
      * El constructor por ausencia.
@@ -27,11 +28,13 @@ public class Movimiento {
      * @param fecha Fecha del movimiento.
      * @param procesado Valor booleano dependiendo si el producto fue o 
      * no procesado
+     * @param usuario Usuario que realizo el movimiento
      */
-    public Movimiento(String cveMovimiento, Fecha fecha, boolean procesado) {
+    public Movimiento(String cveMovimiento, Fecha fecha, boolean procesado, Usuario usuario) {
         this.cveMovimiento = cveMovimiento;
         this.fecha = fecha;
         this.procesado = procesado;
+        this.usuario = usuario;
     }
     
     /**
@@ -44,8 +47,7 @@ public class Movimiento {
     public Movimiento(String cveMovimiento) {
         this.cveMovimiento = cveMovimiento;
         this.fecha = null;
-        this.procesado = false;
-        
+        this.procesado = false;    
     }
     
     /**
@@ -93,6 +95,22 @@ public class Movimiento {
      */
     public boolean getProcesado() {
         return procesado;
+    }
+    
+    /**
+     * Devuelve el usuario que realizo el movimiento
+     * @return Usuario
+     */
+    public Usuario getUsuario() {
+        return this.usuario;
+    }
+    
+    /**
+     * Asigna el usuario que realizo el movimiento
+     * @param usuario Usuario nuevo
+     */
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
     
     /**

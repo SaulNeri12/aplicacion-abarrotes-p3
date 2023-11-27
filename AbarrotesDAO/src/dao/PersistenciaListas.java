@@ -40,12 +40,12 @@ public class PersistenciaListas implements IPersistencia {
      */
     public PersistenciaListas(ConexionAbarrotesBD conexion) {
         this.catalogoProductos = new Productos(conexion);
-        this.registroVentasGranel = new MovimientosGranel();
-        this.registroComprasGranel = new MovimientosGranel();
+        this.registroVentasGranel = new MovimientosGranel(conexion);
+        this.registroComprasGranel = new MovimientosGranel(conexion);
         this.inventarioProductosGranel = new ProductosGranel(conexion);
-        this.registroVentasEmpacados = new MovimientosEmpacados();
-        this.registroComprasEmpacados = new MovimientosEmpacados();
-        this.inventarioProductosEmpacados = new ProductosEmpacados();
+        this.registroVentasEmpacados = new MovimientosEmpacados(conexion);
+        this.registroComprasEmpacados = new MovimientosEmpacados(conexion);
+        this.inventarioProductosEmpacados = new ProductosEmpacados(conexion);
         this.usuarios = new Usuarios(conexion);
     }
     
@@ -163,9 +163,8 @@ public class PersistenciaListas implements IPersistencia {
     }
 
     /**
-     * Metodo el cual permite obtener la venta del parametro dado, siempre y
-     * cuando este si exista dentro de la lista a solicitar.
-     *
+     * Obiene la venta del parametro dado, siempre y cuando este si exista 
+     * dentro de la lista a solicitar.
      * @param venta movimiento de venta, Empacado
      * @return regresa el movimiento de venta Empacado solicitado
      * @throws PersistenciaException arroja error si la venta no esta en la
@@ -173,28 +172,42 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public MovimientoEmpacado obtenVenta(MovimientoEmpacado venta) throws PersistenciaException {
+        
         try {
-            return registroVentasEmpacados.obten(venta);
-        } catch (PersistenciaException e) {
-            throw new PersistenciaException("El registro de ventas de productos empacados que se busca no existe");
+            MovimientoEmpacado encontrado = registroVentasEmpacados.obten(venta);
+            
+            if (encontrado == null) {
+                throw new PersistenciaException("No se encontro la venta");
+            }
+            
+            return encontrado;
+                    
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
+        
     }
 
     /**
      * Metodo el cual permite obtener la compra del parametro dado, siempre y
      * cuando este si exista dentro de la lista a solicitar.
-     *
      * @param compra movimiento de compra, Empacado
      * @return regresa el movimiento de compra Empacado solicitado
      * @throws PersistenciaException arroja error si la compra no esta en la
      * lista
      */
-    @Override //
+    @Override
     public MovimientoEmpacado obtenCompra(MovimientoEmpacado compra) throws PersistenciaException {
         try {
-            return registroComprasEmpacados.obten(compra);
-        } catch (Exception e) {
-            throw new PersistenciaException("El registro de compras de productos empacados que se busca no existe");
+            MovimientoEmpacado encontrado = registroComprasEmpacados.obten(compra);
+            
+            if (encontrado == null) {
+                return null;
+            }
+            
+            return encontrado;
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -210,9 +223,16 @@ public class PersistenciaListas implements IPersistencia {
     @Override
     public MovimientoGranel obtenVenta(MovimientoGranel venta) throws PersistenciaException {
         try {
-            return registroVentasGranel.obten(venta);
-        } catch (Exception e) {
-            throw new PersistenciaException("El registro de ventas de productos a granel que se busca no existe");
+            MovimientoGranel movimiento = registroVentasGranel.obten(venta);
+            
+            if (movimiento == null) {
+                throw new PersistenciaException("No se encontro la venta");
+            }
+            
+            return movimiento;
+            
+        } catch (DAOException ex) {
+            throw new PersistenciaException("No se pudo obtener la venta de producto a granel debido a un error");
         }
     }
 
@@ -228,9 +248,16 @@ public class PersistenciaListas implements IPersistencia {
     @Override
     public MovimientoGranel obtenCompra(MovimientoGranel compra) throws PersistenciaException {
         try {
-            return registroComprasGranel.obten(compra);
-        } catch (Exception e) {
-            throw new PersistenciaException("El registro de compras de productos a granel que se busca no existe");
+            MovimientoGranel movimiento = registroVentasGranel.obten(compra);
+            
+            if (movimiento == null) {
+                throw new PersistenciaException("No se encontro la compra");
+            }
+            
+            return movimiento;
+            
+        } catch (DAOException ex) {
+            throw new PersistenciaException("No se pudo obtener la compra de producto a granel debido a un error");
         }
     }
 
@@ -266,21 +293,10 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void agregarVenta(MovimientoEmpacado venta) throws PersistenciaException {
-        boolean catalogo = false;
-        if (registroVentasEmpacados.obten(venta) == null) {
-            for (Producto producto : catalogoProductos.lista()) {
-                if (producto.getClave().equalsIgnoreCase(venta.getProductoEmpacado().getClave())) {
-                    catalogo = true;
-                    registroVentasEmpacados.agrega(venta);
-                    break;
-                }
-            }
-
-        } else {
-            throw new PersistenciaException("Error: La venta ya esta registrada");
-        }
-        if (catalogo == false) {
-            throw new PersistenciaException("Error: Producto inexistente");
+        try {
+            registroVentasEmpacados.agrega(venta);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -293,75 +309,42 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void agregarCompra(MovimientoEmpacado compra) throws PersistenciaException {
-        boolean catalogo = false;
-        if (registroComprasEmpacados.obten(compra) == null) {
-            for (Producto producto : catalogoProductos.lista()) {
-                if (producto.getClave().equalsIgnoreCase(compra.getProductoEmpacado().getClave())) {
-                    catalogo = true;
-                    registroComprasEmpacados.agrega(compra);
-                    break;
-                }
-            }
-
-        } else {
-            throw new PersistenciaException("Error: La venta ya esta registrada");
-        }
-        if (catalogo == false) {
-            throw new PersistenciaException("Error: Producto inexistente");
+        try {
+            registroComprasEmpacados.agrega(compra);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
     /**
-     * Metodo que agrega un producto dado en el parametro, a una lista, si esta
+     * Agrega un producto dado en el parametro, a una lista, si esta
      * se enuentra en ella arrojara una excepcion.
-     *
      * @param venta Movimiento de venta, granel
-     * @throws PersistenciaException arroja error si ya existe en la lista
+     * @throws PersistenciaException arroja error si ya existe en la lista o 
+     * si ocurre un error interno
      */
     @Override
     public void agregarVenta(MovimientoGranel venta) throws PersistenciaException {
-        boolean catalogo = false;
-        if (registroVentasGranel.obten(venta) == null) {
-            for (Producto producto : catalogoProductos.lista()) {
-                if (producto.getClave().equalsIgnoreCase(venta.getProductoGranel().getClave())) {
-                    catalogo = true;
-                    registroVentasGranel.agrega(venta);
-                    break;
-                }
-            }
-
-        } else {
-            throw new PersistenciaException("Error: La venta ya esta registrada");
-        }
-        if (catalogo == false) {
-            throw new PersistenciaException("Error: Producto inexistente");
+        try {
+            registroVentasGranel.agrega(venta);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
     /**
-     * Metodo que agrega un producto dado en el parametro, a una lista, si esta
+     * Agrega un producto dado en el parametro, a una lista, si esta
      * se enuentra en ella arrojara una excepcion.
-     *
      * @param compra Movimiento de compra, granel
-     * @throws PersistenciaException arroja error si ya existe en la lista
+     * @throws PersistenciaException arroja error si ya existe en la lista o 
+     * si ocurre un error interno
      */
     @Override
     public void agregarCompra(MovimientoGranel compra) throws PersistenciaException {
-        boolean catalogo = false;
-        if (registroComprasGranel.obten(compra) == null) {
-            for (Producto producto : catalogoProductos.lista()) {
-                if (producto.getClave().equalsIgnoreCase(compra.getProductoGranel().getClave())) {
-                    catalogo = true;
-                    registroComprasGranel.agrega(compra);
-                    break;
-                }
-            }
-
-        } else {
-            throw new PersistenciaException("Error: La venta ya esta registrada");
-        }
-        if (catalogo == false) {
-            throw new PersistenciaException("Error: Producto inexistente");
+        try {
+            registroComprasGranel.agrega(compra);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -519,14 +502,10 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void eliminarVenta(MovimientoGranel venta) throws PersistenciaException {
-        if (venta.getProcesado()) {
-            throw new PersistenciaException("Una venta ya procesada no puede ser eliminada");
-        } else {
-            try {
-                registroVentasGranel.elimina(venta);
-            } catch (DAOException e) {
-                System.err.println(e.getMessage());
-            }
+        try {
+            registroVentasGranel.elimina(venta);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -540,15 +519,11 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public void eliminarCompra(MovimientoGranel compra) throws PersistenciaException {
-            if (compra.getProcesado()) {
-                throw new PersistenciaException ("Una compra ya procesada no puede ser eliminada");
-            }else {
-                try {
-                    registroComprasGranel.elimina(compra);
-                } catch (DAOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
+        try {
+            registroComprasGranel.elimina(compra);
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
+        }
     }
     /**
      * Metodo que actualiza un inventario de ventas empacado , realizando
@@ -715,6 +690,7 @@ public class PersistenciaListas implements IPersistencia {
      * @return Numero total de productos
      * @throws PersistenciaException Si no se pudo obtener el numero total de productos
      */
+    @Override
     public int consultarNumeroTotalProductos() throws PersistenciaException {
         try {
             int resultados = catalogoProductos.numeroTotalProductos();
@@ -756,10 +732,10 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public List<Producto> consultarProductosEmpacados() throws PersistenciaException {
-        if (!catalogoProductos.lista('E').isEmpty()) {
+        try {
             return catalogoProductos.lista('E');
-        } else {
-            throw new PersistenciaException("La lista de productos empacado no existe");
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -772,10 +748,10 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public List<Producto> consultarProductosGranel() throws PersistenciaException {
-        if (!catalogoProductos.lista('G').isEmpty()) {
+        try {
             return catalogoProductos.lista('G');
-        } else {
-            throw new PersistenciaException("La lista de productos Granel no existe");
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -791,7 +767,7 @@ public class PersistenciaListas implements IPersistencia {
         if (!inventarioProductosEmpacados.lista().isEmpty()) {
             return inventarioProductosEmpacados.lista();
         } else {
-            throw new PersistenciaException("La lista de inventario de productos empacado no existe");
+            throw new PersistenciaException("No hay productos empacados en el inventario");
         }
     }
 
@@ -807,7 +783,7 @@ public class PersistenciaListas implements IPersistencia {
         if (!inventarioProductosGranel.lista().isEmpty()) {
             return inventarioProductosGranel.lista();
         } else {
-            throw new PersistenciaException("La lista de inventario de productos granel no existe");
+            throw new PersistenciaException("No hay productos a granel en el inventario");
         }
     }
 
@@ -823,7 +799,7 @@ public class PersistenciaListas implements IPersistencia {
         if (!registroVentasEmpacados.lista().isEmpty()) {
             return registroVentasEmpacados.lista();
         } else {
-            throw new PersistenciaException("La lista de ventas de productos empacados no existe");
+            throw new PersistenciaException("No hay ventas de productos empacados registradas");
         }
     }
 
@@ -837,10 +813,16 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public List<MovimientoEmpacado> consultarVentasEmpacado(Periodo periodo) throws PersistenciaException {
-        if (!registroVentasEmpacados.lista(periodo).isEmpty()) {
-            return registroVentasEmpacados.lista(periodo);
-        } else {
-            throw new PersistenciaException("La lista de ventas de productos empacados en el periodo no existe");
+        try {
+            List<MovimientoEmpacado> lista = registroVentasEmpacados.lista(periodo);
+            
+            if (lista.isEmpty()) {
+                throw new PersistenciaException("El registro de ventas de productos empacados esta vacio");
+            }
+            
+            return lista;
+        } catch (DAOException ex) {
+            throw new PersistenciaException("Ocurrio un error al obtener las ventas por periodo, intente mas tarde...");
         }
     }
 
@@ -863,17 +845,16 @@ public class PersistenciaListas implements IPersistencia {
     /**
      * Metodo que muestra la lista de ventas de solo los productos granel que
      * esten dentro del periodo, si esta lista no existe arrojara un error.
-     *
      * @param periodo lapso de dos fechas
      * @return lista de ventas granel en base al periodo
-     * @throws PersistenciaException arrojara si no existe la lista
+     * @throws PersistenciaException Si ocurre un error al devolver la lista
      */
     @Override
     public List<MovimientoGranel> consultarVentasGranel(Periodo periodo) throws PersistenciaException {
-        if (!registroVentasGranel.lista(periodo).isEmpty()) {
+        try {
             return registroVentasGranel.lista(periodo);
-        } else {
-            throw new PersistenciaException("La lista de ventas de productos granel en el periodo no existe");
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
     }
 
@@ -903,10 +884,16 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public List<MovimientoEmpacado> consultarComprasEmpacado(Periodo periodo) throws PersistenciaException {
-        if (!registroComprasEmpacados.lista(periodo).isEmpty()) {
-            return registroComprasEmpacados.lista(periodo);
-        } else {
-            throw new PersistenciaException("La lista de compras de productos granel en el periodo no existe");
+        try {
+            List<MovimientoEmpacado> lista = registroComprasEmpacados.lista(periodo);
+            
+            if (lista.isEmpty()) {
+                throw new PersistenciaException("No hay compras de productos empacados en el registro");
+            }
+            
+            return lista;
+        } catch (DAOException ex) {
+            throw new PersistenciaException("Ocurrio un error al consultar las compras de productos empacados, intente mas tarde...");
         }
     }
 
@@ -919,11 +906,7 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public List<MovimientoGranel> consultarComprasGranel() throws PersistenciaException {
-        if (!registroComprasGranel.lista().isEmpty()) {
-            return registroComprasGranel.lista();
-        } else {
-            throw new PersistenciaException("La lista de compras de productos granel no existe");
-        }
+        return registroComprasGranel.lista();
     }
 
     /**
@@ -936,10 +919,30 @@ public class PersistenciaListas implements IPersistencia {
      */
     @Override
     public List<MovimientoGranel> consultarComprasGranel(Periodo periodo) throws PersistenciaException {
-        if (!registroComprasGranel.lista(periodo).isEmpty()) {
+        try {
             return registroComprasGranel.lista(periodo);
-        } else {
-            throw new PersistenciaException("La lista de compras de productos granel en el periodo no existe");
+        } catch (DAOException ex) {
+            throw new PersistenciaException(ex.getMessage());
         }
+    }
+
+    @Override
+    public int consultarNumeroTotalProductosEmpacados() throws PersistenciaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int consultarNumeroTotalProductosGranel() throws PersistenciaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int consultarNumeroTotalMovimientosEmpacados() throws PersistenciaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int consultarNumeroTotalMovimientosGranel() throws PersistenciaException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

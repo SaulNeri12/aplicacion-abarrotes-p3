@@ -2,7 +2,6 @@ package objetosServicio;
 
 /**
  * Clase con métodos para diversas funciones referentes a fechas y periodos.
- * 
  * @author Enrique Rodríguez Angulo
  */
 public class Periodo {

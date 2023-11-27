@@ -13,4 +13,6 @@ public class EliminacionesAbarrotes {
     public static String ELIMINAR_PRODUCTO      = "DELETE FROM Productos WHERE clave_producto = ?";
     public static String ELIMINAR_MOVIMIENTO    = "DELETE FROM Movimientos WHERE clave_movimiento = ?";
     public static String ELIMINAR_USUARIO       = "DELETE FROM Usuarios WHERE id = ?";
+    public static String ELIMINAR_MOVIMIENTO_GRANEL = "DELETE FROM MovimientosGranel WHERE clave_movimiento = ? and procesado = false";
+    public static String ELIMINAR_MOVIMIENTO_EMPACADO = "DELETE FROM MovimientosEmpacado WHERE clave_movimiento = ? and procesado = false";
 }
