@@ -4,7 +4,7 @@ import objetosServicio.Fecha;
 
 /**
  * Clase sobre los movimientos de productos a granel.
- * @author Enrique Rodriguez
+ * @author Jesus Castro
  */
 public class MovimientoGranel extends Movimiento{
     private ProductoGranel productoGranel;
@@ -21,11 +21,11 @@ public class MovimientoGranel extends Movimiento{
      * @param fecha Fecha del movimiento.
      * @param procesado Valor booleano dependiendo si el producto fue o 
      * no procesado
-     * 
      * @param productoGranel Producto de clase a granel.
+     * @param usuario Usuario que realizo el movimiento de producto a granel
      */
-    public MovimientoGranel(String cveMovimiento, Fecha fecha, boolean procesado, ProductoGranel productoGranel) {
-       super(cveMovimiento, fecha, procesado);
+    public MovimientoGranel(String cveMovimiento, Fecha fecha, boolean procesado, ProductoGranel productoGranel, Usuario usuario) {
+       super(cveMovimiento, fecha, procesado, usuario);
        this.productoGranel = productoGranel;
     }
     

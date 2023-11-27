@@ -19,6 +19,43 @@ public interface IPersistencia {
     /////////////////////////////////////////////////////////////////////////////////////////
     
     /**
+     * Devuelve el numero total de productos registrados en la base de datos abarrotes, 
+     * independientemente de tu tipo
+     * @return total de productos
+     * @throws PersistenciaException Si ocurre un error de busqueda
+     */
+    public int consultarNumeroTotalProductos() throws PersistenciaException;
+    
+    /**
+     * Devuelve el numero total de productos empacados registrados en la base de datos abarrotes
+     * @return total de productos empacados
+     * @throws PersistenciaException Si ocurre un error de busqueda
+     */
+    public int consultarNumeroTotalProductosEmpacados() throws PersistenciaException;
+    
+    /**
+     * Devuelve el numero total de productos a granel registrados en la base de datos abarrotes
+     * @return total de productos granel
+     * @throws PersistenciaException Si ocurre un error de busqueda
+     */
+    public int consultarNumeroTotalProductosGranel() throws PersistenciaException;
+    
+    /**
+     * Devuelve el numero total de movimientos sobre productos empacados en la base de datos abarrotes
+     * @return total de movimientos de productos empacados
+     * @throws PersistenciaException Si ocurre un error de busqueda
+     */
+    public int consultarNumeroTotalMovimientosEmpacados() throws PersistenciaException;
+    
+    /**
+     * Devuelve el numero total de movimientos sobre productos a granel en la base de datos abarrotes
+     * @return total de movimientos de productos a granel
+     * @throws PersistenciaException Si ocurre un error de busqueda
+     */
+    public int consultarNumeroTotalMovimientosGranel() throws PersistenciaException;
+    
+    
+    /**
      * Devuelve el usuario especificado si se aloja en la base de datos de abarrotes
      * @param usuario Usuario a buscar
      * @return Usuario si se encuentra registrado

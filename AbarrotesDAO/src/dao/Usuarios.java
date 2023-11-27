@@ -28,7 +28,7 @@ public class Usuarios {
     // donde se alojaran los productos que se vayan guardando con la PAGINACION
     private List<Usuario> usuarios;
     private int desplazamiento = 0;
-    private int limiteListaUsuarios = 20;
+    private int limiteListaUsuarios = 30;
     
     /** 
      * Crea una instancia del manejador de usuarios
@@ -250,15 +250,39 @@ public class Usuarios {
                 return ;
             }
             
+            rs.first();
+            
+            // el primer usuario encontrado
+            int id = rs.getInt("id");
+            String nombre = rs.getString("nombre");
+            String telefono = rs.getString("telefono");
+            String email = rs.getString("email");
+            String contrasena = rs.getString("contrasena");
+            String rolUsuario = rs.getString("rol");
+
+            usuarioEncontrado = new Usuario(
+                    id,
+                    nombre,
+                    telefono,
+                    email,
+                    rolUsuario
+            );
+
+            usuarioEncontrado.setContrasena(contrasena);
+
+            usuarios.add(usuarioEncontrado);
+            
+            this.desplazamiento++;
+            
             while (rs.next()) {
 
                 // obtiene los datos del primer producto encontrado encontrado
-                int id = rs.getInt("id");
-                String nombre = rs.getString("nombre");
-                String telefono = rs.getString("telefono");
-                String email = rs.getString("email");
-                String contrasena = rs.getString("contrasena");
-                String rolUsuario = rs.getString("rol");
+                id = rs.getInt("id");
+                nombre = rs.getString("nombre");
+                telefono = rs.getString("telefono");
+                email = rs.getString("email");
+                contrasena = rs.getString("contrasena");
+                rolUsuario = rs.getString("rol");
 
                 usuarioEncontrado = new Usuario(
                         id,
@@ -271,13 +295,12 @@ public class Usuarios {
                 usuarioEncontrado.setContrasena(contrasena);
 
                 usuarios.add(usuarioEncontrado);
+                this.desplazamiento++;
             }
             
             rs.close();
             stmt.close();
             
-            desplazamiento += this.limiteListaUsuarios;
-                    
         } catch (SQLException ex) {
             throw new DAOException(ex.getMessage());
         }

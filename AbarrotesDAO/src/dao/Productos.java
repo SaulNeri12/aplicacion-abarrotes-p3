@@ -17,9 +17,8 @@ import plantillas.InsercionesAbarrotes;
 import plantillas.ModificacionesAbarrotes;
 
 /**
- * Permite realizar operaciones para manejar productos almacenados en la base de
- * datos Abarrotes.
- *
+ * Permite realizar operaciones para manejar productos almacenados en el catalogo,
+ * guardados en la base de datos Abarrotes.
  * @author Saul Neri
  */
 public class Productos {
@@ -29,7 +28,7 @@ public class Productos {
     private List<Producto> productos;
     // variables necesarias para paginacion de consulta de Productos
     private int desplazamiento = 0;
-    private int limiteListaProductos = 20;
+    private int limiteListaProductos = 30;
 
     /**
      * Crea una instancia del manejador del inventario de productos.
@@ -273,6 +272,8 @@ public class Productos {
 
             productos.add(productoEncontrado);
             
+            this.desplazamiento++;
+            
             // por cada producto en la busqueda...
             while (rs.next()) {
                 // obtiene los datos del primer producto encontrado encontrado...
@@ -289,12 +290,11 @@ public class Productos {
                 );
                 
                 productos.add(productoEncontrado);
+                this.desplazamiento++;
             }
 
             rs.close();
             stmt.close();
-
-            this.desplazamiento += this.limiteListaProductos;
 
         } catch (SQLException ex) {
             //System.out.println(ex.getErrorCode());
@@ -317,14 +317,73 @@ public class Productos {
      * @param tipo tipo de producto
      * @return regresa lista de productos de un mismo tipo
      */
-    public List<Producto> lista(char tipo) {
-        List<Producto> productosTipo = new ArrayList();
-        for (Producto producto : productos) {
-            if (producto.getTipo() == tipo) {
-                productosTipo.add(producto);
+    public List<Producto> lista(char tipo) throws DAOException {
+        Producto productoEncontrado = null;
+
+        this.productos.clear();
+        this.desplazamiento = 0;
+        
+        try {
+
+            PreparedStatement stmt = this.conexionBD.getConexionMySQL().prepareStatement(
+                    ConsultasAbarrotes.PRODUCTOS_POR_TIPO,
+                    ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE
+            );
+
+            stmt.setString(1, String.format("%c", tipo));
+            stmt.setInt(2, this.limiteListaProductos);
+            stmt.setInt(3, this.desplazamiento);
+
+            ResultSet rs = stmt.executeQuery();
+
+            rs.first();
+            
+            // obtiene el primer dato
+            String claveProducto = rs.getString("clave_producto");
+            String nombre = rs.getString("nombre");
+            String tipoProducto = rs.getString("tipo");
+            String unidad = rs.getString("unidad");
+
+            productoEncontrado = new Producto(
+                    claveProducto,
+                    nombre,
+                    tipoProducto.toCharArray()[0],
+                    unidad
+            );
+
+            productos.add(productoEncontrado);
+            
+            this.desplazamiento++;
+            
+            // por cada producto en la busqueda...
+            while (rs.next()) {
+                // obtiene los datos del primer producto encontrado encontrado...
+                claveProducto = rs.getString("clave_producto");
+                nombre = rs.getString("nombre");
+                tipoProducto = rs.getString("tipo");
+                unidad = rs.getString("unidad");
+
+                productoEncontrado = new Producto(
+                        claveProducto,
+                        nombre,
+                        tipoProducto.toUpperCase().toCharArray()[0],
+                        unidad
+                );
+                
+                productos.add(productoEncontrado);
+                this.desplazamiento++;
             }
+
+            rs.close();
+            stmt.close();
+
+            return this.productos;
+            
+        } catch (SQLException ex) {
+            //System.out.println(ex.getErrorCode());
+            throw new DAOException(ex.getMessage());
         }
-        return productosTipo;
     }
 
 }

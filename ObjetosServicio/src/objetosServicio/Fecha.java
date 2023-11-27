@@ -5,7 +5,6 @@ import java.util.GregorianCalendar;
 
 /**
  * Clase con métodos para diversas funciones referentes a fechas.
- *
  * @author Enrique Rodríguez Angulo
  */
 public class Fecha extends GregorianCalendar {
@@ -21,7 +20,6 @@ public class Fecha extends GregorianCalendar {
         super.set(GregorianCalendar.MINUTE, 0);
         super.set(GregorianCalendar.SECOND, 0);
         super.set(GregorianCalendar.MILLISECOND, 0);
-
     }
 
     /**
@@ -38,6 +36,20 @@ public class Fecha extends GregorianCalendar {
         super.set(GregorianCalendar.DAY_OF_MONTH, dia);
         super.set(GregorianCalendar.MONTH, mes - 1);
         super.set(GregorianCalendar.YEAR, anio);
+        super.set(GregorianCalendar.HOUR, 0);
+        super.set(GregorianCalendar.MINUTE, 0);
+        super.set(GregorianCalendar.SECOND, 0);
+        super.set(GregorianCalendar.MILLISECOND, 0);
+    }
+    
+    /**
+     * Crea una fecha a partir de un objeto Date
+     * @param date objeto date
+     */
+    public Fecha(Date date) {
+        super.set(GregorianCalendar.DAY_OF_MONTH, date.getDate());
+        super.set(GregorianCalendar.MONTH, date.getMonth());
+        super.set(GregorianCalendar.YEAR, date.getYear());
         super.set(GregorianCalendar.HOUR, 0);
         super.set(GregorianCalendar.MINUTE, 0);
         super.set(GregorianCalendar.SECOND, 0);

@@ -4,7 +4,7 @@ import objetosServicio.Fecha;
 
 /**
  * Clase sobre los movimientos de productos empacados.
- * @author Enrique Rodriguez
+ * @author Jesus Castro
  */
 public class MovimientoEmpacado extends Movimiento{
     private ProductoEmpacado productoEmpacado;
@@ -24,9 +24,10 @@ public class MovimientoEmpacado extends Movimiento{
      * @param procesado Valor booleano dependiendo si el producto fue o 
      * no procesado
      * @param productoEmpacado Producto de clase empacado.
+     * @param usuario Usuario que realizo el movimiento de producto empacado
      */
-    public MovimientoEmpacado(String cveMovimiento, Fecha fecha, boolean procesado, ProductoEmpacado productoEmpacado) {
-       super(cveMovimiento, fecha, procesado);
+    public MovimientoEmpacado(String cveMovimiento, Fecha fecha, boolean procesado, ProductoEmpacado productoEmpacado, Usuario usuario) {
+       super(cveMovimiento, fecha, procesado, usuario);
        this.productoEmpacado = productoEmpacado;
     }
     

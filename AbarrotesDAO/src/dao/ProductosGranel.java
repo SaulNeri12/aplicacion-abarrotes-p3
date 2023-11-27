@@ -17,8 +17,9 @@ import plantillas.InsercionesAbarrotes;
 import plantillas.ModificacionesAbarrotes;
 
 /**
- *
- * @author Equipo
+ * Se encarga de obtener, agregar, actualizar y eliminar productos empacados del
+ * sistema de abarrotes.
+ * @author Saul Neri
  */
 public class ProductosGranel {    
     private Productos productos;
@@ -28,7 +29,7 @@ public class ProductosGranel {
     private List<ProductoGranel> productosGranel;
     // variables necesarias para paginacion de consulta de Productos
     private int desplazamiento = 0;
-    private int limiteListaProductos = 20;    
+    private int limiteListaProductos = 30;    
     
     /**
      * Crea una instancia del manejador del inventario de productos a granel y 
@@ -52,7 +53,7 @@ public class ProductosGranel {
         Producto producto = null;
         ProductoGranel granel = null;
     
-        producto = productos.obten(productoGranel);
+        producto = productos.obten(new Producto(productoGranel.getClave()));
     
         if (producto.getTipo() != 'G') {
             throw new DAOException("El producto dado no es un producto a granel");
@@ -70,8 +71,6 @@ public class ProductosGranel {
             
             ResultSet rs = stmt.executeQuery();
                
-            
-            
             // si no existe el producto empacado...
             if (!rs.next()) {
                 
@@ -180,7 +179,7 @@ public class ProductosGranel {
         PreparedStatement stmt;
 
         try {
-            stmt = this.conexionBD.getConexionMySQL().prepareStatement(EliminacionesAbarrotes.ELIMINAR_PRODUCTO_EMPACADO);
+            stmt = this.conexionBD.getConexionMySQL().prepareStatement(EliminacionesAbarrotes.ELIMINAR_PRODUCTO_GRANEL);
 
             // WHERE clave_producto = ...
             stmt.setString(1, productoGranel.getClave());
@@ -240,6 +239,7 @@ public class ProductosGranel {
             );
 
             productosGranel.add(productoGranel);
+            this.desplazamiento++;
             
             // por cada producto en la busqueda...
             while (rs.next()) {
@@ -258,12 +258,11 @@ public class ProductosGranel {
                 }
                 
                 productosGranel.add(productoGranel);
+                this.desplazamiento++;
             }
 
             rs.close();
             stmt.close();
-
-            this.desplazamiento += this.limiteListaProductos;
 
         } catch (SQLException ex) {
             //System.out.println(ex.getErrorCode());
