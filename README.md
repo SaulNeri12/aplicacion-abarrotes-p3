@@ -1,8 +1,9 @@
 # Proyecto Final - Aplicacion Abarrotes
 
 ### Requerimientos
-Estos son los programas que se necesita para poder ejecutar el proyecto.
+Estos son los programas que se necesita para poder instalar y ejecutar el proyecto.
 * XAMPP
+* Git
 
 ### Preparar XAMPP
 Para probar el programa primero necesitas correr el programa XAMPP para arrancar la base de datos MySQL que es necesaria para el programa, se te mostrara la interfaz donde aparecen las siguientes opciones:
